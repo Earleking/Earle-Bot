@@ -8,8 +8,8 @@ var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = 'RGAPI-0a8d7fab-ffd9-4143-9ecc-1f8278594403';
-const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
+const riotAPIKey = 'KEYHERE';
+const youtubeAPIKey = 'KEYHERE';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
@@ -25,15 +25,7 @@ client.on('message', msg => {
   var id = msg.content.split(" ", 2)[0];
   if(id[0] == "%" ){
     if(Math.floor(Math.random() * 51) >= 49) {
-      msg.channel.send(navySealp1, {tts: true});
-      msg.channel.send(navySealp2, {tts: true});
-      msg.channel.send(navySealp3, {tts: true});
-      msg.channel.send(navySealp4, {tts: true});
-      msg.channel.send(navySealp5, {tts: true});
-      msg.channel.send(navySealp6, {tts: true});
-      msg.channel.send(navySealp7, {tts: true});
-      msg.channel.send(navySealp8, {tts: true});
-      msg.channel.send(navySealp9, {tts: true});
+      
       return;
     }
   }
@@ -351,4 +343,4 @@ function skipSong(msg) {
     voiceChannel.leave();
   }
 }
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DFofKQ.eo00MOMMGsryC5exQSD1K-IDG6g');
+client.login('DISCORD-TOKEN-HERE');
