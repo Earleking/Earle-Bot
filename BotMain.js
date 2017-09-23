@@ -8,13 +8,14 @@ var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = '';
-const youtubeAPIKey = '';
+const riotAPIKey = 'RGAPI-bab5f27d-9b56-42c5-8704-fb71f2b6de17';
+const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
 var channel, voiceChannel;
 var musicQueue = [];
+var connection;
 var navySealp1 = "What the fuck did you just fucking say about me, you little bitch? I’ll have you know I graduated top of my class in the Navy Seals, and I’ve been involved in numerous secret raids on";
 var navySealp2 = "Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I’m the top sniper in the entire US armed forces. You are nothing to me but just another target. I";
 var navySealp3 = "will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me";
@@ -329,35 +330,33 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
+  console.log(url);
   musicQueue.push(url);
+  console.log("add: " + musicQueue.length);
   if(musicQueue.length == 1){
     playSong(musicQueue[0]);
   }
 }
 function playSong(url) {
+  console.log("playing a song");
   var rStream = ytdl(url, {
     filter : 'audioonly',
   });
- //////////  
-  const connection = voiceChannel.playRawStream(rStream);
+ ////////// 
+  connection = voiceChannel.playStream(rStream);
   connection.on('end', () => {
+    connection = null;     
     musicQueue.splice(0, 1);
     if(musicQueue.length > 0) {
       playSong(musicQueue[0]);
     }
     else {
+      //console.log(musicQueue.length);
       channel.leave();
     }
   });
 }
-function skipSong(msg) { 
-  musicQueue.splice(0, 1);
-  if(musicQueue.length) {
-    playSong(musicQueue[0]);
-  }
-  else {
-    msg.channel.send("Queue Concluded.");
-    voiceChannel.leave();
-  }
+function skipSong(msg) {
+  connection.end();
 }
-client.login('');
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DKc_Cw.ERVEfQIClkgGaDHtLRiurlrSLCc');
