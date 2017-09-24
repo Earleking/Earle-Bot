@@ -15,7 +15,7 @@ let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
 var channel, voiceChannel;
 var musicQueue = [];
-var connection;
+var connection, leaveTimer;
 var navySealp1 = "What the fuck did you just fucking say about me, you little bitch? I’ll have you know I graduated top of my class in the Navy Seals, and I’ve been involved in numerous secret raids on";
 var navySealp2 = "Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I’m the top sniper in the entire US armed forces. You are nothing to me but just another target. I";
 var navySealp3 = "will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me";
@@ -121,6 +121,7 @@ client.on('message', msg => {
       channel = undefined;
       musicQueue = [];
       connection = null;
+      clearTimeout()
     }
   }
   else if(id == "%play") {
@@ -170,7 +171,7 @@ client.on('message', msg => {
     readFile('./quotes.txt', msg);
   }
   else if(id == "%cheer") cheer(msg);
-  
+  else if(id == "%test") msg.channel("working");
 });
 
 function readFile(filePath, msg) {
@@ -397,6 +398,10 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
+  if(leaveTimer != undefined) {
+    clearTimeout(leaveTimer);
+    leaveTimer = undefined;
+  }
   console.log(url);
   musicQueue.push(url);
   console.log("add: " + musicQueue.length);
@@ -419,7 +424,9 @@ function playSong(url) {
     }
     else {
       //console.log(musicQueue.length);
-      channel.leave();
+      leaveTimer = setTimeout(function() {
+        channel.leave();
+      }, 60000);
     }
   });
 }
