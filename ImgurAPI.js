@@ -41,7 +41,7 @@ class ImgurAPI {
             if(imgs[i] == undefined) {
                 callback("No image found");
             }
-            callback(imgs[i].link);
+            if(imgs[i] != undefined) callback(imgs[i].link);
         });
     }
 }

@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const musicClient = require('discord.js-music');
 const ingame = require('./inGame');
+const fs = require('fs');
 var riotAPI = require('./RiotAPI');
 var request = require('request');
 var YouTube = require('./youTubePlayer');
@@ -33,7 +34,7 @@ client.on('ready', () => {
 client.on('message', msg => {
   var id = msg.content.split(" ", 2)[0];
   if(id[0] == "%" ){
-    if(Math.floor(Math.random() * 51) >= 50) {
+    if(Math.floor(Math.random() * 51) >= 60) {
       msg.channel.send(navySealp1, {tts: true});
       msg.channel.send(navySealp2, {tts: true});
       msg.channel.send(navySealp3, {tts: true});
@@ -165,8 +166,43 @@ client.on('message', msg => {
   else if(id == "%resume") {
     resume(msg);
   }
+  else if(id == "%quote") {
+    readFile('./quotes.txt', msg);
+  }
+  else if(id == "%cheer") cheer(msg);
   
 });
+
+function readFile(filePath, msg) {
+  fs.readFile('./quotes.txt', 'utf8', function(err, data) {
+    if(err) msg.channel.send("Something went wrong");
+    else {
+      var temp = data.split("*");
+      msg.channel.send(temp[Math.round(Math.random() * temp.length - .5)]);  
+      
+    }
+  });
+}
+function cheer(msg) {
+  fs.readFile('./cheer.txt', 'utf8', function(err, data) {
+    if(err) msg.channel.send("Something went wrong");
+    else {
+      var temp = data.split("*");      
+      temp = temp[Math.round(Math.random() * temp.length - .5)];
+      var words = temp.split(" ");
+      var final = "";
+      for(var i = 0; i < temp.length; i ++) {
+        if(words[i] == undefined) continue;
+        if(words[i].trim() == "_") {
+          final += msg.author + " ";
+        }
+        else final += words[i] + " ";
+      }
+      msg.channel.send(final);  
+      
+    }
+  });
+}
 function pause(msg) {
   if(connection) {
     if(connection.paused == false) {
@@ -388,7 +424,7 @@ function playSong(url) {
   });
 }
 function skipSong(msg) {
-  if(connection) {
+  if(connection != null) {
     connection.end();
   }
 
