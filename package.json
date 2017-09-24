@@ -1,0 +1,28 @@
+{
+  "name": "earle-bot",
+  "version": "1.0.0",
+  "description": "A NodeJS Discord Bot",
+  "main": "BotMain.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ear leking/Earle-Bot.git"
+  },
+  "author": "Arek Fielding",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Earleking/Earle-Bot/issues"
+  },
+  "homepage": "https://github.com/Earleking/Earle-Bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "discord.js-music": "^1.0.3",
+    "ffmpeg-binaries": "^3.2.2-3",
+    "opusscript": "0.0.3",
+    "request": "^2.82.0",
+    "ytdl-core": "^0.17.1"
+  },
+  "devDependencies": {}
+}
