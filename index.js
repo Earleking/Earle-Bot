@@ -171,11 +171,7 @@ client.on('message', msg => {
     readFile('./quotes.txt', msg);
   }
   else if(id == "%cheer") cheer(msg);
-<<<<<<< HEAD
-  else if(id == "%test") msg.channel("working");
-=======
   else if(id == "%status") msg.channel.send("Working");
->>>>>>> dd6aa735436d9ac3ab7451317f092b714663e486
 });
 
 function readFile(filePath, msg) {
