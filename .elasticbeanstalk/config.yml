@@ -1,7 +1,11 @@
 branch-defaults:
   master:
-    environment: Test1
+    environment: Test2
     group_suffix: null
+environment-defaults:
+  Test2:
+    branch: null
+    repository: null
 global:
   application_name: Earle-Bot
   branch: null
