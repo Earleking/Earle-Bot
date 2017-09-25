@@ -170,7 +170,7 @@ client.on('message', msg => {
     readFile('./quotes.txt', msg);
   }
   else if(id == "%cheer") cheer(msg);
-  
+  else if(id == "%status") msg.channel.send("Working");
 });
 
 function readFile(filePath, msg) {
