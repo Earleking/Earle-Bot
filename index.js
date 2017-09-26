@@ -98,6 +98,7 @@ client.on('message', msg => {
       channel = undefined;
       musicQueue = [];
       connection = null;
+      clearTimeout()
     }
   }
   else if(id == "%play") {
@@ -405,6 +406,10 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
+  if(leaveTimer != undefined) {
+    clearTimeout(leaveTimer);
+    leaveTimer = undefined;
+  }
   console.log(url);
   musicQueue.push(url);
   console.log("add: " + musicQueue.length);
@@ -427,7 +432,9 @@ function playSong(url) {
     }
     else {
       //console.log(musicQueue.length);
-      channel.leave();
+      leaveTimer = setTimeout(function() {
+        channel.leave();
+      }, 60000);
     }
   });
 }
