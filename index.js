@@ -8,23 +8,14 @@ var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = 'RGAPI-bab5f27d-9b56-42c5-8704-fb71f2b6de17';
-const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
+const riotAPIKey = '';
+const youtubeAPIKey = '';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
 var channel, voiceChannel;
 var musicQueue = [];
 var connection;
-var navySealp1 = "What the fuck did you just fucking say about me, you little bitch? I’ll have you know I graduated top of my class in the Navy Seals, and I’ve been involved in numerous secret raids on";
-var navySealp2 = "Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I’m the top sniper in the entire US armed forces. You are nothing to me but just another target. I";
-var navySealp3 = "will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me";
-var navySealp4 = "over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the";
-var navySealp5 = "storm, maggot. The storm that wipes out the pathetic little thing you call your life. You’re fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred";
-var navySealp6 = "ways, and that’s just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will";
-var navySealp7 = "use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little “clever” comment"; 
-var navySealp8 = "was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn’t, you didn’t, and now you’re paying the price, you goddamn idiot. "
-var navySealp9 = "I will shit fury all over you and you will drown in it. You’re fucking dead, kiddo."; 
 
 musicClient(client);
 client.on('ready', () => {
@@ -33,20 +24,6 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   var id = msg.content.split(" ", 2)[0];
-  if(id[0] == "%" ){
-    if(Math.floor(Math.random() * 51) >= 60) {
-      msg.channel.send(navySealp1, {tts: true});
-      msg.channel.send(navySealp2, {tts: true});
-      msg.channel.send(navySealp3, {tts: true});
-      msg.channel.send(navySealp4, {tts: true});
-      msg.channel.send(navySealp5, {tts: true});
-      msg.channel.send(navySealp6, {tts: true});
-      msg.channel.send(navySealp7, {tts: true});
-      msg.channel.send(navySealp8, {tts: true});
-      msg.channel.send(navySealp9, {tts: true});
-      return;
-    }
-  }
   
   if (msg.content === '%ping') {
     msg.channel.send('Pong!');
@@ -171,8 +148,38 @@ client.on('message', msg => {
   }
   else if(id == "%cheer") cheer(msg);
   else if(id == "%status") msg.channel.send("Working");
+  else if(id == "%cwin") {
+      ingame.getInGameRanks(riotAPIKey, secondPart(msg), function(team1, team2) {
+        if(team2 == undefined) {
+            msg.channel.send("Summoner not in findable game");
+            return;
+        }
+        msg.channel.send("Team 1: ");
+        msg.channel.send(team1);
+        msg.channel.send("Team 2: ");
+        msg.channel.send(team2);
+        getTeamRating(team1, 0, 0, function(t1Rating) {
+            getTeamRating(team2, 0, 0, function(t2Rating) {
+                var winChance = (t1Rating / (t1Rating + t2Rating));
+                msg.channel.send("Team 1: " + winChance + "%");
+                winChance = 1 - winChance;
+                msg.channel.send("Team 2: " + winChance + "%");
+            });
+        });
+    });
+  }
 });
+function getTeamRating(team, index, score, callback) {
+    amIGood(team.split(":")[0], function(pscore) {
+        if(isNaN(score)) {
+            callback("-1");
+        }
+        score += pscore;
+        if(index >= 4) {
 
+        } 
+    });
+}
 function readFile(filePath, msg) {
   fs.readFile('./quotes.txt', 'utf8', function(err, data) {
     if(err) msg.channel.send("Something went wrong");
@@ -305,6 +312,7 @@ function gameAnaylsis(matchList, summName) {
         }
     }
     var finalScore = score/matches;
+    return finalScore;
     if(finalScore > 50) {
         return "Should be climbing hard";
     }
@@ -430,4 +438,4 @@ function skipSong(msg) {
 
   
 }
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DKc_Cw.ERVEfQIClkgGaDHtLRiurlrSLCc');
+client.login('');
