@@ -15,6 +15,7 @@ let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
 var channel, voiceChannel;
 var musicQueue = [];
+var musicQueueNames = [];
 var connection;
 var leaveTimer = undefined;
 
@@ -98,6 +99,7 @@ client.on('message', msg => {
       channel.leave();
       channel = undefined;
       musicQueue = [];
+      musicQueueNames = [];
       connection = null;
       clearTimeout()
     }
@@ -109,6 +111,14 @@ client.on('message', msg => {
     }
     var songsToAdd = secondPart(msg).split(",");
     ytCall(msg, songsToAdd, 0);
+  }
+  else if(id == "%playing") {
+    if(musicQueueNames[0] != undefined) {
+      msg.channel.send("Currently Playing " + musicQueueNames[0]); 
+    }
+    else {
+      msg.channel.send("Nothing playing");
+    }
   }
   else if(id == "%skip") {
     skipSong(msg);
@@ -173,6 +183,7 @@ client.on('message', msg => {
 function ytCall(msg, songs, index) {
   youtube.search(songs[index] + " audio", function(url, name) {
     msg.channel.send("Adding " + name + " to queue");
+    musicQueueNames.push(name);
     addSong(url);
     if(index < songs.length - 1) {
       ytCall(msg, songs, index + 1);
@@ -418,7 +429,6 @@ function addSong(url) {
   }
   console.log(url);
   musicQueue.push(url);
-  console.log("add: " + musicQueue.length);
   if(musicQueue.length == 1){
     playSong(musicQueue[0]);
   }
@@ -433,6 +443,7 @@ function playSong(url) {
   connection.on('end', () => {
     connection = null;     
     musicQueue.splice(0, 1);
+    musicQueueNames.splice(0, 1);
     if(musicQueue.length > 0) {
       playSong(musicQueue[0]);
     }
@@ -446,9 +457,13 @@ function playSong(url) {
 }
 function skipSong(msg) {
   if(connection != null) {
+    msg.channel.send("Now skipping this song you seem not to like");
     connection.end();
   }
 
   
 }
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//Main bot
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//Test bot
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
