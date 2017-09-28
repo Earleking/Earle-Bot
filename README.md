@@ -1,9 +1,9 @@
 # Earle-Bot
 A NodeJS Discord Bot
 
-This is an in-development bot. 
+There may be occasional glitches, still getting ironed out.
 
-Issues to be resolved still: 
-- Optimization for API data retrieval
-- Getting the music player to work 100% of the time
-- Add any new features
+Features to be added:
+- Pull from spotify playlists
+- Pull from yt playlists
+- Any requests
