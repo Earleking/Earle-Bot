@@ -178,6 +178,9 @@ client.on('message', msg => {
       msg.channel.send("http://i0.kym-cdn.com/entries/icons/original/000/013/113/hahaha-no.gif");
     }
   }
+  else if(id == "%shuffle") {
+    shuffle();
+  }
 });
 function spotPlayList(msg) {
   var link = secondPart(msg);
@@ -205,7 +208,14 @@ function spotPlayList(msg) {
 function ytCall(msg, songs, index) {
   youtube.search(songs[index] + " audio", function(url, name) {
     if(url != "!"){
-      msg.channel.send("Adding " + name + " to queue");
+      if(songs.length < 5) {
+        msg.channel.send("Adding " + name + " to queue");        
+      }
+      else {
+        if(index == 0) {
+          msg.channel.send("Adding playlist to queue");
+        }
+      }
       musicQueueNames.push(name);
       addSong(url);
     }
@@ -491,7 +501,22 @@ function skipSong(msg) {
 
   
 }
+
+function shuffle() {
+  for(var i = 1; i < musicQueue.length; i ++) {
+    var ts = Math.floor(Math.random() * musicQueue.length);
+    var temp = musicQueue[ts];
+    musicQueue[ts] = musicQueue[i];
+    musicQueue[i] = temp;
+
+    temp = musicQueueNames[ts];
+    musicQueueNames[ts] = musicQueueNames[i];
+    musicQueueNames[i] = temp;
+    
+
+  }
+}
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
