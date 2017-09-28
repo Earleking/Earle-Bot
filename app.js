@@ -8,8 +8,8 @@ var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = 'RGAPI-f604d9a7-c658-4ebf-b09e-1d5837ff038c';
-const youtubeAPIKey = '';
+const riotAPIKey = '';
+const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
@@ -70,7 +70,7 @@ client.on('message', msg => {
         msg.channel.send(team2);
     });
   }
-  else if(id == "%summon") {
+  else if(id == "%summon1") {
     if(msg.member.voiceChannel) {
       channel = msg.member.voiceChannel;
       msg.member.voiceChannel.join().then(connection => {
@@ -106,10 +106,8 @@ client.on('message', msg => {
       msg.channel.send("Summon me first");
       return;
     }
-    youtube.search(secondPart(msg), function(url, name) {
-      msg.channel.send("Adding " + name + " to queue");
-      addSong(url);
-    });
+    var songsToAdd = secondPart(msg).split(",");
+    ytCall(msg, songsToAdd, 0);
   }
   else if(id == "%skip") {
     skipSong(msg);
@@ -140,7 +138,7 @@ client.on('message', msg => {
   }
   else if(id == "%pause") {
     pause(msg);
-  }
+  } 
   else if(id == "%resume") {
     resume(msg);
   }
@@ -170,22 +168,15 @@ client.on('message', msg => {
     });
   }
 });
-function getTeamRating(team, index, score, callback) {
-    console.log(team[index] + ": " + index);
-    amIGood(team[index].split(":")[0], function(pscore) {
-        if(isNaN(score)) {
-            callback("-1");
-        }
-        score += pscore;
-        if(index >= 4) {
-            callback(score);
-        } 
-        else {
-            index += 1;
-            getTeamRating(team, index, score, callback);
-        }
-        
-    });
+
+function ytCall(msg, songs, index) {
+  youtube.search(songs[index] + " audio", function(url, name) {
+    msg.channel.send("Adding " + name + " to queue");
+    addSong(url);
+    if(index < songs.length - 1) {
+      ytCall(msg, songs, index + 1);
+    }
+  });
 }
 function readFile(filePath, msg) {
   fs.readFile('./quotes.txt', 'utf8', function(err, data) {
@@ -459,4 +450,8 @@ function skipSong(msg) {
 
   
 }
+<<<<<<< HEAD:index.js
 client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DKwN1Q.cdyn-IltogDQ7Mzq31BBLjMU5fw');
+=======
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK4htA.tzvWyi4YeNEKRVgBbfE-8hJ7nFs');
+>>>>>>> 53eea642d64f7699738ae4f514129e2b0ae7da4f:app.js

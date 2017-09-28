@@ -4,12 +4,12 @@
   "description": "A NodeJS Discord Bot",
   "main": "BotMain.js",
   "scripts": {
-    "test": "node index.js",
-    "start": "node index.js"
+    "test": "node app.js",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ear leking/Earle-Bot.git"
+    "url": "git+https://github.com/Earleking/Earle-Bot.git"
   },
   "author": "Arek Fielding",
   "license": "ISC",
