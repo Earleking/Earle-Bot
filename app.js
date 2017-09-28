@@ -16,6 +16,7 @@ let youtube = new YouTube(youtubeAPIKey);
 var channel, voiceChannel;
 var musicQueue = [];
 var connection;
+var leaveTimer = undefined;
 
 musicClient(client);
 client.on('ready', () => {
@@ -70,7 +71,7 @@ client.on('message', msg => {
         msg.channel.send(team2);
     });
   }
-  else if(id == "%summon1") {
+  else if(id == "%summon") {
     if(msg.member.voiceChannel) {
       channel = msg.member.voiceChannel;
       msg.member.voiceChannel.join().then(connection => {
@@ -450,4 +451,4 @@ function skipSong(msg) {
 
   
 }
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK68fQ.DggxeOqx16sXpaRC5QuJgarIv1M');
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
