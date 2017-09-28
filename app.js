@@ -175,7 +175,9 @@ function getTeamRating(team, index, score, callback) {
         }
         score += pscore;
         if(index >= 4) {
-
+        }
+      });
+}
 function ytCall(msg, songs, index) {
   youtube.search(songs[index], function(url, name) {
     msg.channel.send("Adding " + name + " to queue");
