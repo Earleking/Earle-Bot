@@ -7,6 +7,7 @@ var riotAPI = require('./RiotAPI');
 var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
+var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
 const riotAPIKey = '';
 const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
@@ -18,7 +19,10 @@ var musicQueue = [];
 var musicQueueNames = [];
 var connection;
 var leaveTimer = undefined;
-
+var canSpot = false;
+sAPI.authenticate(function(res) {
+  canSpot = res;
+});
 musicClient(client);
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -158,35 +162,59 @@ client.on('message', msg => {
   }
   else if(id == "%cheer") cheer(msg);
   else if(id == "%status") msg.channel.send("Working");
-  else if(id == "%cwin") {
-      ingame.getInGameRanks(riotAPIKey, secondPart(msg), function(team1, team2) {
-        if(team2 == undefined) {
-            msg.channel.send("Summoner not in findable game");
-            return;
-        }
-        msg.channel.send("Team 1: ");
-        msg.channel.send(team1);
-        msg.channel.send("Team 2: ");
-        msg.channel.send(team2);
-        getTeamRating(team1, 0, 0, function(t1Rating) {
-            getTeamRating(team2, 0, 0, function(t2Rating) {
-                var winChance = (t1Rating / (t1Rating + t2Rating));
-                msg.channel.send("Team 1: " + winChance + "%");
-                winChance = 1 - winChance;
-                msg.channel.send("Team 2: " + winChance + "%");
-            });
-        });
-    });
+  else if(id == "%spotify") {
+    if(canSpot) {
+      spotPlayList(msg);
+    }
+    
+  }
+  else if(id == "%renewSpotify") {
+    if(msg.author.id == 170720396176392192) {
+      sAPI.authenticate(function(res) {
+        canSpot = res;
+      });
+    }
+    else {
+      msg.channel.send("http://i0.kym-cdn.com/entries/icons/original/000/013/113/hahaha-no.gif");
+    }
   }
 });
+function spotPlayList(msg) {
+  var link = secondPart(msg);
+  var parts = link.split('/');
+  var id, plid;
+  for(var i = 0; i < parts.length; i ++) {
+    console.log(parts[i]);
+    if(parts[i] == "user") {
+      id = parts[i + 1];
+    }
+    else if(parts[i] == "playlist") {
+      plid = parts[i + 1];
+    }
+  }
+  if(id == undefined || plid == undefined) {
+    msg.channel.send("Invalid link");
+    return;
+  }
+  sAPI.getPlayList(id, plid, function(songList) {
+    console.log("song: " + songList[0]);
 
+    ytCall(msg, songList, 0);    
+  });
+}
 function ytCall(msg, songs, index) {
   youtube.search(songs[index] + " audio", function(url, name) {
-    msg.channel.send("Adding " + name + " to queue");
-    musicQueueNames.push(name);
-    addSong(url);
+    if(url != "!"){
+      msg.channel.send("Adding " + name + " to queue");
+      musicQueueNames.push(name);
+      addSong(url);
+    }
+    else {
+      msg.channel.send("Could not find a video for " + name);
+    }
     if(index < songs.length - 1) {
       ytCall(msg, songs, index + 1);
+      
     }
   });
 }
@@ -251,7 +279,7 @@ function secondPart(message) {
   var temp = message.content.split(" ");
   var name = "";
   for(var i = 1; i < temp.length; i ++) {
-    name += temp[i].toLowerCase() + " ";
+    name += temp[i] + " ";
   }
   return name.trim();
 }
@@ -464,6 +492,6 @@ function skipSong(msg) {
   
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
