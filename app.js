@@ -450,8 +450,4 @@ function skipSong(msg) {
 
   
 }
-<<<<<<< HEAD:index.js
-client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DKwN1Q.cdyn-IltogDQ7Mzq31BBLjMU5fw');
-=======
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK4htA.tzvWyi4YeNEKRVgBbfE-8hJ7nFs');
->>>>>>> 53eea642d64f7699738ae4f514129e2b0ae7da4f:app.js
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK68fQ.DggxeOqx16sXpaRC5QuJgarIv1M');
