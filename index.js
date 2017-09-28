@@ -8,7 +8,7 @@ var request = require('request');
 var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = '';
+const riotAPIKey = 'RGAPI-f604d9a7-c658-4ebf-b09e-1d5837ff038c';
 const youtubeAPIKey = '';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
@@ -171,14 +171,20 @@ client.on('message', msg => {
   }
 });
 function getTeamRating(team, index, score, callback) {
-    amIGood(team.split(":")[0], function(pscore) {
+    console.log(team[index] + ": " + index);
+    amIGood(team[index].split(":")[0], function(pscore) {
         if(isNaN(score)) {
             callback("-1");
         }
         score += pscore;
         if(index >= 4) {
-
+            callback(score);
         } 
+        else {
+            index += 1;
+            getTeamRating(team, index, score, callback);
+        }
+        
     });
 }
 function readFile(filePath, msg) {
@@ -252,9 +258,9 @@ function amIGood(summName, callback){
       var gameIds = [];
       var matches = [];
       var limit;
-      if(nOfGames > 15) {
-        limit = 15;
-        for(var i = 0; i < 15; i ++) {
+      if(nOfGames > 10) {
+        limit = 10;
+        for(var i = 0; i < 10; i ++) {
           gameIds[i] = matchList[i].gameId;
         }
       }
@@ -268,25 +274,33 @@ function amIGood(summName, callback){
            gameIds[i] = matchList[i].gameId;
         }
       }
-      var counter = 0;
-      for(var i = 0; i < gameIds.length; i ++) {
+      getMatchLoop(gameIds, matches, limit, 0);
+    });
+  });
+}
+function getMatchLoop(gameIds, matches, limit, i) {
+    setTimeout(function() {
         lAPI.getMatch(gameIds[i], function(match) {
-            matches[counter] = match;
-            counter += 1;
+            matches[i] = match;
             try {
                 matches.length;
             }
             catch (Error) {
                 callback("There was a problem. Probably just exceeded rate limits. Try again in a bit");
             }
-            if(counter == limit) {
+            if(i == limit) {
                 score = gameAnaylsis(matches, summName);   
                 callback(score);         
             }
+            else {
+                i += 1;
+                getMatchLoop(gameIds, matches, limit, i);
+            }
+            
         });
-      }
-    });
-  });
+    }, 2500);
+        
+    
 }
 function gameAnaylsis(matchList, summName) {
     var match;
@@ -445,4 +459,4 @@ function skipSong(msg) {
 
   
 }
-client.login('');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DKwN1Q.cdyn-IltogDQ7Mzq31BBLjMU5fw');
