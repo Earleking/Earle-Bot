@@ -93,7 +93,7 @@ client.on('message', msg => {
         msg.channel.send(team2);
     });
   }
-  else if(id == "%summon") {
+  else if(id == "%summon1") {
     if(msg.member.voiceChannel) {
       channel = msg.member.voiceChannel;
       msg.member.voiceChannel.join().then(connection => {
@@ -129,10 +129,8 @@ client.on('message', msg => {
       msg.channel.send("Summon me first");
       return;
     }
-    youtube.search(secondPart(msg), function(url, name) {
-      msg.channel.send("Adding " + name + " to queue");
-      addSong(url);
-    });
+    var songsToAdd = secondPart(msg).split(",");
+    ytCall(msg, songsToAdd, 0);
   }
   else if(id == "%skip") {
     skipSong(msg);
@@ -163,7 +161,7 @@ client.on('message', msg => {
   }
   else if(id == "%pause") {
     pause(msg);
-  }
+  } 
   else if(id == "%resume") {
     resume(msg);
   }
@@ -174,6 +172,15 @@ client.on('message', msg => {
   else if(id == "%status") msg.channel.send("Working");
 });
 
+function ytCall(msg, songs, index) {
+  youtube.search(songs[index], function(url, name) {
+    msg.channel.send("Adding " + name + " to queue");
+    addSong(url);
+    if(index < songs.length - 1) {
+      ytCall(msg, songs, index + 1);
+    }
+  });
+}
 function readFile(filePath, msg) {
   fs.readFile('./quotes.txt', 'utf8', function(err, data) {
     if(err) msg.channel.send("Something went wrong");
@@ -437,4 +444,4 @@ function skipSong(msg) {
 
   
 }
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DKc_Cw.ERVEfQIClkgGaDHtLRiurlrSLCc');
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK4htA.tzvWyi4YeNEKRVgBbfE-8hJ7nFs');
