@@ -179,7 +179,7 @@ function getTeamRating(team, index, score, callback) {
       });
 }
 function ytCall(msg, songs, index) {
-  youtube.search(songs[index], function(url, name) {
+  youtube.search(songs[index] + " audio", function(url, name) {
     msg.channel.send("Adding " + name + " to queue");
     addSong(url);
     if(index < songs.length - 1) {
