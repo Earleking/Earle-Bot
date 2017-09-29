@@ -19,6 +19,7 @@ class YouTube {
             var t = results.items[0].id.videoId;
             if(t == undefined) {
                 console.log("Could not find a suitable video");
+                callback("!", name);
             }
             else {
                 url = "https://www.youtube.com/watch?v=" + t;
