@@ -70,7 +70,7 @@ client.on('message', msg => {
         msg.channel.send(team2);
     });
   }
-  else if(id == "%summon1") {
+  else if(id == "%summon") {
     if(msg.member.voiceChannel) {
       channel = msg.member.voiceChannel;
       msg.member.voiceChannel.join().then(connection => {
