@@ -489,6 +489,10 @@ function playSong(url) {
       //console.log(musicQueue.length);
       leaveTimer = setTimeout(function() {
         channel.leave();
+        channel = undefined;
+        musicQueue = [];
+        musicQueueNames = [];
+        connection = null;
       }, 60000);
     }
   });
