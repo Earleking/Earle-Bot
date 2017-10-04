@@ -181,7 +181,23 @@ client.on('message', msg => {
   else if(id == "%shuffle") {
     shuffle();
   }
+  else if(id == "%yt") {
+    ytPlaylist(msg);
+  }
 });
+function ytPlaylist(msg) {
+  var link = secondPart(msg);
+  youtube.getPlayList(link, function(list, names) {
+    if(list == "!") {
+      msg.channel.send("Something went wrong. Maybe a bad link?");
+    } 
+    msg.channel.send("Adding playlist to queue");
+    for(var i = 0; i < list.length; i ++) {
+      musicQueueNames.push(names[i]);
+      addSong(list[i]);
+    }
+  });
+}
 function spotPlayList(msg) {
   var link = secondPart(msg);
   var parts = link.split('/');
@@ -461,6 +477,7 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
+  console.log("sss");
   if(leaveTimer != undefined) {
     clearTimeout(leaveTimer);
     leaveTimer = undefined;
