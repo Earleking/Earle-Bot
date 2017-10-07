@@ -190,6 +190,7 @@ function ytPlaylist(msg) {
   youtube.getPlayList(link, function(list, names) {
     if(list == "!") {
       msg.channel.send("Something went wrong. Maybe a bad link?");
+      return;
     } 
     msg.channel.send("Adding playlist to queue");
     for(var i = 0; i < list.length; i ++) {
