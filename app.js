@@ -181,7 +181,24 @@ client.on('message', msg => {
   else if(id == "%shuffle") {
     shuffle();
   }
+  else if(id == "%yt") {
+    ytPlaylist(msg);
+  }
 });
+function ytPlaylist(msg) {
+  var link = secondPart(msg);
+  youtube.getPlayList(link, function(list, names) {
+    if(list == "!") {
+      msg.channel.send("Something went wrong. Maybe a bad link?");
+      return;
+    } 
+    msg.channel.send("Adding playlist to queue");
+    for(var i = 0; i < list.length; i ++) {
+      musicQueueNames.push(names[i]);
+      addSong(list[i]);
+    }
+  });
+}
 function spotPlayList(msg) {
   var link = secondPart(msg);
   var parts = link.split('/');
@@ -461,6 +478,7 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
+  console.log("sss");
   if(leaveTimer != undefined) {
     clearTimeout(leaveTimer);
     leaveTimer = undefined;
@@ -489,6 +507,10 @@ function playSong(url) {
       //console.log(musicQueue.length);
       leaveTimer = setTimeout(function() {
         channel.leave();
+        channel = undefined;
+        musicQueue = [];
+        musicQueueNames = [];
+        connection = null;
       }, 60000);
     }
   });
@@ -517,6 +539,6 @@ function shuffle() {
   }
 }
 //Main bot
-//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
