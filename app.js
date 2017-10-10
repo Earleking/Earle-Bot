@@ -284,6 +284,8 @@ function spotPlayList(msg) {
   }
   if(id == undefined || plid == undefined) {
     msg.channel.send("Invalid link");
+    lockOut = false;
+    lockOutCounter = 0;
     return;
   }
   sAPI.getPlayList(id, plid, function(songList) {
