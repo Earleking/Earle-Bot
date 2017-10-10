@@ -20,6 +20,8 @@ var musicQueueNames = [];
 var connection;
 var leaveTimer = undefined;
 var canSpot = false;
+var lockOut = false;
+var lockOutCounter = 0;
 sAPI.authenticate(function(res) {
   canSpot = res;
 });
@@ -30,7 +32,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   var id = msg.content.split(" ", 2)[0];
-  
+  if(msg.content.startsWith("%")) {
   if (msg.content === '%ping') {
     msg.channel.send('Pong!');
     
@@ -76,57 +78,15 @@ client.on('message', msg => {
         msg.channel.send(team2);
     });
   }
-  else if(id == "%summon") {
-    if(msg.member.voiceChannel) {
-      channel = msg.member.voiceChannel;
-      msg.member.voiceChannel.join().then(connection => {
-        console.log("voice channel joined");
-        voiceChannel = connection;
-      });
-    }
-    else {
-      msg.channel.send("Join a voice channel before summoning me");
-    }
-  }
+  
   else if(id == "%skill") {
     //msg.channel.send("Note this is a relative function. So it grades you relative to your skill level and the players you play against.");
     amIGood(secondPart(msg), function(output) {
       msg.channel.send(output);
     });
   }
-  else if(id == "%banish") {
-    if(channel == undefined){
-      msg.channel.send("You can't banish what hasn't been summoned. Pleb.");
-    }
-    else {
-      msg.channel.send("Leaving channel");
-      channel.leave();
-      channel = undefined;
-      musicQueue = [];
-      musicQueueNames = [];
-      connection = null;
-      clearTimeout()
-    }
-  }
-  else if(id == "%play") {
-    if(voiceChannel == undefined) {
-      msg.channel.send("Summon me first");
-      return;
-    }
-    var songsToAdd = secondPart(msg).split(",");
-    ytCall(msg, songsToAdd, 0);
-  }
-  else if(id == "%playing") {
-    if(musicQueueNames[0] != undefined) {
-      msg.channel.send("Currently Playing " + musicQueueNames[0]); 
-    }
-    else {
-      msg.channel.send("Nothing playing");
-    }
-  }
-  else if(id == "%skip") {
-    skipSong(msg);
-  }
+  
+  
   else if(id == '%split') {
     msg.channel.send(secondPart(msg));
   }
@@ -151,38 +111,144 @@ client.on('message', msg => {
   else if(id == "%realniggahours") {
     msg.channel.send("Who up?");
   }
-  else if(id == "%pause") {
-    pause(msg);
-  } 
-  else if(id == "%resume") {
-    resume(msg);
-  }
+  
   else if(id == "%quote") {
     readFile('./quotes.txt', msg);
   }
   else if(id == "%cheer") cheer(msg);
   else if(id == "%status") msg.channel.send("Working");
-  else if(id == "%spotify") {
-    if(canSpot) {
-      spotPlayList(msg);
+  
+  else if (id == "%test") {
+    var url = "defnotaurl";
+    var rStream;
+    try {
+        rStream = ytdl(url, {
+            filter : 'audioonly',
+        });
     }
-    
+    catch (Error) {
+        msg.channel.send("Not a valid link");
+    }
   }
-  else if(id == "%renewSpotify") {
-    if(msg.author.id == 170720396176392192) {
-      sAPI.authenticate(function(res) {
-        canSpot = res;
-      });
+  //Music stuff goes here
+  else {
+    if(!lockOut) {
+        if(id == "%summon") {
+            if(msg.member.voiceChannel) {
+                channel = msg.member.voiceChannel;
+                msg.member.voiceChannel.join().then(connection => {
+                    console.log("voice channel joined");
+                    voiceChannel = connection;
+                });
+            }
+            else {
+                msg.channel.send("Join a voice channel before summoning me");
+            }
+        }
+        else if(id == "%banish") {
+            if(!lockOut) {
+                if(channel == undefined){
+                    msg.channel.send("You can't banish what hasn't been summoned. Pleb.");
+                }
+                else {
+                    lockOut = true;
+                    msg.channel.send("Leaving channel");
+                    channel.leave();
+                    channel = undefined;
+                    musicQueue = [];
+                    musicQueueNames = [];
+                    connection.end();
+                    connection = null;
+                    clearTimeout()
+                }
+            }
+        }
+        else if(id == "%play") {
+            if(!lockOut){
+                if(voiceChannel == undefined) {
+                    msg.channel.send("Summon me first");
+                    return;
+                }
+                lockOut = true;
+                if(musicQueue.length > 65) {
+                    msg.channel.send("Queue at max length");
+                    return;
+                }
+                var songsToAdd = secondPart(msg).split(",");
+                ytCall(msg, songsToAdd, 0);
+            }
+            else {
+                msg.channel.send("Still finishing previous command. Try in a bit");
+            }
+        }
+        else if(id == "%clear") {
+            if(!lockOut) {
+                musicQueue = [];
+                musicQueueNames = [];
+                connection.end();
+            }
+            else msg.channel.send("Bit busy right now, hold up a second.");  
+        }
+        else if(id == "%pause") {
+            pause(msg);
+        } 
+        else if(id == "%resume") {
+            resume(msg);
+        }
+        else if(id == "%spotify") {
+            if(canSpot) {
+                lockOut = true;
+                spotPlayList(msg);
+            }
+    
+        }
+        else if(id == "%renewSpotify") {
+            if(msg.author.id == 170720396176392192) {
+                sAPI.authenticate(function(res) {
+                    canSpot = res;
+                });
+            }
+            else {
+                msg.channel.send("http://i0.kym-cdn.com/entries/icons/original/000/013/113/hahaha-no.gif");
+            }
+        }
+    
+        else if(id == "%shuffle") {
+            if(!lockOut) {
+                shuffle();
+                msg.channel.send("Queue now shuffled. You're welcome");
+            }
+            else msg.channel.send("Busy right now, try in a bit");
+        }
+        else if(id == "%yt") {
+            ytPlaylist(msg);
+        }
+        else if(id == "%playing") {
+            if(musicQueueNames[0] != undefined) {
+                msg.channel.send("Currently Playing " + musicQueueNames[0]); 
+            }
+            else {
+                msg.channel.send("Nothing playing");
+            }
+        }
+        else if(id == "%skip") {
+            skipSong(msg);
+        }
+  
     }
     else {
-      msg.channel.send("http://i0.kym-cdn.com/entries/icons/original/000/013/113/hahaha-no.gif");
+        lockOutCounter += 1;
+        if(lockOutCounter < 2) {
+            msg.channel.send("Bit busy right now, give me a moment");
+        }
+        else if(lockOutCounter < 4) {
+            msg.channel.send("Patience is a virtue");
+        }
+        else {
+            msg.channel.send("Persistent little shit aren't you?");
+        }
     }
   }
-  else if(id == "%shuffle") {
-    shuffle();
-  }
-  else if(id == "%yt") {
-    ytPlaylist(msg);
   }
 });
 function ytPlaylist(msg) {
@@ -190,6 +256,8 @@ function ytPlaylist(msg) {
   youtube.getPlayList(link, function(list, names) {
     if(list == "!") {
       msg.channel.send("Something went wrong. Maybe a bad link?");
+      lockOut = false;
+      lockOutCounter = 0;
       return;
     } 
     msg.channel.send("Adding playlist to queue");
@@ -197,6 +265,8 @@ function ytPlaylist(msg) {
       musicQueueNames.push(names[i]);
       addSong(list[i]);
     }
+    lockOut = false;
+    lockOutCounter = 0;
   });
 }
 function spotPlayList(msg) {
@@ -242,6 +312,10 @@ function ytCall(msg, songs, index) {
     if(index < songs.length - 1) {
       ytCall(msg, songs, index + 1);
       
+    }
+    else {
+        lockOut = false;
+        lockOutCounter = 0;
     }
   });
 }
@@ -511,6 +585,8 @@ function playSong(url) {
         musicQueue = [];
         musicQueueNames = [];
         connection = null;
+        lockOut = false;
+        lockOutCounter = 0;
       }, 60000);
     }
   });
@@ -520,8 +596,6 @@ function skipSong(msg) {
     msg.channel.send("Now skipping this song you seem not to like");
     connection.end();
   }
-
-  
 }
 
 function shuffle() {

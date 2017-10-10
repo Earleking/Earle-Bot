@@ -19,7 +19,7 @@ class YouTube {
             try {
                 t = results.items[0].id.videoId;                
             }
-            catch(error) {
+            catch(Error) {
                 console.log("No video found");
                 
             }
