@@ -157,9 +157,9 @@ client.on('message', msg => {
                     channel = undefined;
                     musicQueue = [];
                     musicQueueNames = [];
-                    connection.end();
                     connection = null;
                     clearTimeout()
+                    lockOut = false;
                 }
             }
         }
@@ -295,31 +295,58 @@ function spotPlayList(msg) {
   });
 }
 function ytCall(msg, songs, index) {
-  youtube.search(songs[index] + " audio", function(url, name) {
-    if(url != "!"){
-      if(songs.length < 5) {
-        msg.channel.send("Adding " + name + " to queue");        
-      }
-      else {
-        if(index == 0) {
-          msg.channel.send("Adding playlist to queue");
+  console.log("Out: " + index);
+  if(songs[index].includes("youtube.com")) {
+    youtube.linkSearch(songs[index], function(link, name) {
+        console.log("In: " + index);
+        if(link == "!") {
+            msg.channel.send("Invalid link");
         }
-      }
-      musicQueueNames.push(name);
-      addSong(url);
-    }
-    else {
-      msg.channel.send("Could not find a video for " + name);
-    }
-    if(index < songs.length - 1) {
-      ytCall(msg, songs, index + 1);
-      
-    }
-    else {
-        lockOut = false;
-        lockOutCounter = 0;
-    }
-  });
+        else {
+            msg.channel.send("Adding " + name + " to queue");
+            musicQueueNames.push(name);
+            addSong(link);
+            if(index < songs.length - 1) {
+                ytCall(msg, songs, index + 1);
+            }   
+            else {
+                lockOut = false;
+                lockOutCounter = 0;
+            }
+        }
+        
+    });
+    
+  }
+  else {
+    youtube.search(songs[index] + " audio", function(url, name) {
+        console.log("In: " + index);
+
+        if(url != "!"){
+            if(songs.length < 5) {
+                msg.channel.send("Adding " + name + " to queue");        
+            }
+            else {
+                if(index == 0) {
+                msg.channel.send("Adding playlist to queue");
+                }
+            }
+            musicQueueNames.push(name);
+            addSong(url);
+        }
+        else {
+            msg.channel.send("Could not find a video for " + name);
+        }
+        if(index < songs.length - 1) {
+            ytCall(msg, songs, index + 1);
+        
+        }
+        else {
+            lockOut = false;
+            lockOutCounter = 0;
+        }
+    });
+  }
 }
 function readFile(filePath, msg) {
   fs.readFile('./quotes.txt', 'utf8', function(err, data) {
@@ -554,7 +581,7 @@ function calculateRating(match, id, role) {
   return score;
 }
 function addSong(url) {
-  console.log("sss");
+  //console.log("sss");
   if(leaveTimer != undefined) {
     clearTimeout(leaveTimer);
     leaveTimer = undefined;
@@ -573,7 +600,7 @@ function playSong(url) {
  ////////// 
   connection = voiceChannel.playStream(rStream);
   connection.on('end', () => {
-    connection = null;     
+    //connection = null;     
     musicQueue.splice(0, 1);
     musicQueueNames.splice(0, 1);
     if(musicQueue.length > 0) {
@@ -615,6 +642,6 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');

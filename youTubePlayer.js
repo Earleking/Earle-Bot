@@ -62,5 +62,27 @@ class YouTube {
             
         });
     }
+    linkSearch(link, callback) {
+        var id = link.split('=');
+        id = id[id.length - 1];
+        var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + id + '&key=' + this.API;
+        this.request(url, function(error, response, body) {
+            var results = JSON.parse(body);
+            var err = false;
+            var name;
+            try {
+                name = results.items[0].snippet.title;
+            }
+            catch (Error) {
+                console.log(id);
+            }
+            if(!err) {
+                callback(link, name);
+            }
+            else {
+                callback("!", "!");
+            }
+        });
+    }
 }
 module.exports = YouTube;
