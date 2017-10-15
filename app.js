@@ -9,7 +9,7 @@ var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = '';
+const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
 const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
@@ -182,12 +182,20 @@ client.on('message', msg => {
             }
         }
         else if(id == "%clear") {
+            if(channel == undefined) {
+                msg.channel.send("Try summoning me before cleraing the queue. Might help");
+                return;
+            }
             if(!lockOut) {
                 musicQueue = [];
                 musicQueueNames = [];
                 connection.end();
             }
             else msg.channel.send("Bit busy right now, hold up a second.");  
+        }
+        else if(channel == undefined) {
+            msg.channel.send("No can do. I'm kinda just floating in limbo right now. Try summoning me first");
+            return;
         }
         else if(id == "%pause") {
             pause(msg);
@@ -416,11 +424,12 @@ function secondPart(message) {
 function amIGood(summName, callback){
   lAPI.getAccountID(summName.replace(" ", ""), function(ID) {
     lAPI.getPastGames(ID, function(matchList, nOfGames) {
+      console.log("Working");
       var gameIds = [];
       var matches = [];
       var limit;
       if(nOfGames > 10) {
-        limit = 10;
+        limit = 9;
         for(var i = 0; i < 10; i ++) {
           gameIds[i] = matchList[i].gameId;
         }
@@ -435,12 +444,13 @@ function amIGood(summName, callback){
            gameIds[i] = matchList[i].gameId;
         }
       }
-      getMatchLoop(gameIds, matches, limit, 0);
+      getMatchLoop(gameIds, matches, limit, 0, summName, callback);
     });
   });
 }
-function getMatchLoop(gameIds, matches, limit, i) {
+function getMatchLoop(gameIds, matches, limit, i, summName, callback) {
     setTimeout(function() {
+        console.log(gameIds[i]);
         lAPI.getMatch(gameIds[i], function(match) {
             matches[i] = match;
             try {
@@ -455,11 +465,11 @@ function getMatchLoop(gameIds, matches, limit, i) {
             }
             else {
                 i += 1;
-                getMatchLoop(gameIds, matches, limit, i);
+                getMatchLoop(gameIds, matches, limit, i, summName, callback);
             }
             
         });
-    }, 2500);
+    }, 1500);
         
     
 }
@@ -473,6 +483,7 @@ function gameAnaylsis(matchList, summName) {
     var id, role;
     for(var i = 0; i < matchList.length; i ++) {
         match = matchList[i];
+        console.log(matchList);
         partic = match.participantIdentities;
         for(var t = 0; t < partic.length; t ++) {
             if(partic[t].player.summonerName.toLowerCase() == summName) {
@@ -642,6 +653,6 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');

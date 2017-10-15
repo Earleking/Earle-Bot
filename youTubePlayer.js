@@ -42,14 +42,16 @@ class YouTube {
         this.request(url, function(error, response, body) {
             var results = JSON.parse(body);
             try {
-                results = results[i].snippet.resourceId.videoId;
+                results = results.items;
                 for(var i = 0; i < results.length; i ++) {
+                    console.log(results[i]);
                     list[i] = "https://www.youtube.com/watch?v=" + results[i].snippet.resourceId.videoId;
-                    names[i] = results[i].snippet.title;
+                    names[i] = results  [i].snippet.title;
                 }
                 callback(list, names);                
             }
             catch(error) {
+                //console.log(results);
                 console.log("video error");
                 callback("!");
                 return;
