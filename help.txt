@@ -1,0 +1,6 @@
+Music Commands are:
+%summon - Summons me to your channel
+%banish - Removes me from the channel
+%play <query>, <query> - Plays the song specified. Also accepts youtube video links
+%yt <link> - Plays the youtube playlist linked
+%spotify <link> - Plays the spotify playlist linked
