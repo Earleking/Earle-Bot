@@ -38,7 +38,11 @@ client.on('message', msg => {
     
   }
   else if(id == "%help") {
-    msg.channel.send("Feature coming soon, maybe... For now ask Arek what I do");
+    fs.readFile('./help.txt', 'utf8', function (err, body) {
+      if(err) console.log(err);
+      else msg.channel.send(body);
+    });
+    ;
   }
   else if(id == "%coin") {
     a = Math.random();
