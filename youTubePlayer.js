@@ -71,6 +71,7 @@ class YouTube {
         });
     }
     linkSearch(link, callback) {
+        link = link.split("&")[0];                
         var id = link.split('=');
         id = id[id.length - 1];
         var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + id + '&key=' + this.API;
