@@ -31,16 +31,29 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-  var id = msg.content.split(" ", 2)[0];
+  var id = msg.content.split(" ", 2)[0].toLowerCase();
   if(msg.content.startsWith("%")) {
   if (msg.content === '%ping') {
     msg.channel.send('Pong!');
     
   }
-  else if(msg.content == "%help") {
+  else if(id == "%help") {
     msg.channel.send("Feature coming soon, maybe... For now ask Arek what I do");
   }
-  else if (msg.content === '%end') {
+  else if(id == "%coin") {
+    a = Math.random();
+    a = Math.round(a);
+    if(a == 1) {
+      msg.channel.send("Heads");
+    }
+    else msg.channel.send("Tails");
+  }
+  else if(id == "%dice") {
+    numb = Math.random() * 5.99 + 1;
+    numb = Math.floor(numb);
+    msg.channel.send("I rolled a " + numb);
+  }
+  else if (id === '%end') {
     if(msg.author.id == 170720396176392192) {
         msg.channel.send("Strike me down and I will become more powerful than you could possibly imagine");
         setTimeout(function() {

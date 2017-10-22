@@ -35,7 +35,13 @@ class YouTube {
     }
     getPlayList(link, callback) {
         var parts = link.split('=');
-        var id = parts[parts.length - 1];
+        var id;       
+        for(var i = 0; i < parts.length - 1; i ++) {
+            if(parts[i].includes('list')) {
+                id = parts[i + 1];
+                break;
+            }
+        }
         var list = [];
         var names = [];
         var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=' + id + '&key=' + this.API;
