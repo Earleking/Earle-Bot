@@ -31,22 +31,33 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-  var id = msg.content.split(" ", 2)[0];
+  var id = msg.content.split(" ", 2)[0].toLowerCase();
   if(msg.content.startsWith("%")) {
   if (msg.content === '%ping') {
     msg.channel.send('Pong!');
     
   }
-  else if(msg.content == "%help") {
-    fs.readFile("./help.txt", function(err, data) {
-        if(err) {
-            console.log(err);
-        }
-        console.log(data);
-        msg.channel.send(data);
+  else if(id == "%help") {
+    fs.readFile('./help.txt', 'utf8', function (err, body) {
+      if(err) console.log(err);
+      else msg.channel.send(body);
     });
+    ;
   }
-  else if (msg.content === '%end') {
+  else if(id == "%coin") {
+    a = Math.random();
+    a = Math.round(a);
+    if(a == 1) {
+      msg.channel.send("Heads");
+    }
+    else msg.channel.send("Tails");
+  }
+  else if(id == "%dice") {
+    numb = Math.random() * 5.99 + 1;
+    numb = Math.floor(numb);
+    msg.channel.send("I rolled a " + numb);
+  }
+  else if (id === '%end') {
     if(msg.author.id == 170720396176392192) {
         msg.channel.send("Strike me down and I will become more powerful than you could possibly imagine");
         setTimeout(function() {
@@ -91,7 +102,17 @@ client.on('message', msg => {
       msg.channel.send(output);
     });
   }
-  
+  else if(id == "%joke") {
+    url = "https://www.reddit.com/r/Jokes.json";
+    request(url, function(err, res, body) {
+        body = JSON.parse(body).data.children;
+        //console.log(body);
+        numb = Math.random() * (body.length - 1);
+        numb = Math.round(numb);
+        joke = body[numb].data.title + '\n' + body[numb].data.selftext;
+        msg.channel.send(joke);
+    });
+  }
   
   else if(id == '%split') {
     msg.channel.send(secondPart(msg));
@@ -654,11 +675,19 @@ function shuffle() {
     temp = musicQueueNames[ts];
     musicQueueNames[ts] = musicQueueNames[i];
     musicQueueNames[i] = temp;
-    
-
   }
 }
 //Main bot
+<<<<<<< HEAD
 //client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
 client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+=======
+<<<<<<< HEAD
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//Test bot
+//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+=======
+client.login('');
+>>>>>>> 789d5fd56b0860c1e58dcb59810587b23e7786a4
+>>>>>>> 369ea9e71298eccd077d7f0398d96f6b28237ef5

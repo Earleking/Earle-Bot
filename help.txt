@@ -1,3 +1,12 @@
+<<<<<<< HEAD
 %help - Opens Help
 %summon - Summons me to your current channel
 %banish - Removes me from your channel
+=======
+Music Commands are:
+%summon - Summons me to your channel
+%banish - Removes me from the channel
+%play <query>, <query> - Plays the song specified. Also accepts youtube video links
+%yt <link> - Plays the youtube playlist linked
+%spotify <link> - Plays the spotify playlist linked
+>>>>>>> 369ea9e71298eccd077d7f0398d96f6b28237ef5
