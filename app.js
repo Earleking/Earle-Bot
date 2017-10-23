@@ -102,7 +102,17 @@ client.on('message', msg => {
       msg.channel.send(output);
     });
   }
-  
+  else if(id == "%joke") {
+    url = "https://www.reddit.com/r/Jokes.json";
+    request(url, function(err, res, body) {
+        body = JSON.parse(body).data.children;
+        //console.log(body);
+        numb = Math.random() * (body.length - 1);
+        numb = Math.round(numb);
+        joke = body[numb].data.title + '\n' + body[numb].data.selftext;
+        msg.channel.send(joke);
+    });
+  }
   
   else if(id == '%split') {
     msg.channel.send(secondPart(msg));
@@ -665,11 +675,9 @@ function shuffle() {
     temp = musicQueueNames[ts];
     musicQueueNames[ts] = musicQueueNames[i];
     musicQueueNames[i] = temp;
-    
-
   }
 }
 //Main bot
-//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
