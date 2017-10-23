@@ -9,8 +9,8 @@ var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
-const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
+const riotAPIKey = '';
+const youtubeAPIKey = '';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
@@ -678,6 +678,10 @@ function shuffle() {
   }
 }
 //Main bot
+<<<<<<< HEAD
 client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
 //client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+=======
+client.login('');
+>>>>>>> 789d5fd56b0860c1e58dcb59810587b23e7786a4
