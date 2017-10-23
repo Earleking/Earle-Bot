@@ -1,0 +1,3 @@
+%help - Opens Help
+%summon - Summons me to your current channel
+%banish - Removes me from your channel

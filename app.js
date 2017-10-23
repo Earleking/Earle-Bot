@@ -9,8 +9,8 @@ var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
-const riotAPIKey = '';
-const youtubeAPIKey = '';
+const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
+const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
@@ -38,7 +38,13 @@ client.on('message', msg => {
     
   }
   else if(msg.content == "%help") {
-    msg.channel.send("Feature coming soon, maybe... For now ask Arek what I do");
+    fs.readFile("./help.txt", function(err, data) {
+        if(err) {
+            console.log(err);
+        }
+        console.log(data);
+        msg.channel.send(data);
+    });
   }
   else if (msg.content === '%end') {
     if(msg.author.id == 170720396176392192) {
@@ -653,4 +659,6 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//Test bot
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
