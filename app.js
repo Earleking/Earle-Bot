@@ -678,16 +678,6 @@ function shuffle() {
   }
 }
 //Main bot
-<<<<<<< HEAD
 //client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
 client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
-=======
-<<<<<<< HEAD
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
-//Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
-=======
-client.login('');
->>>>>>> 789d5fd56b0860c1e58dcb59810587b23e7786a4
->>>>>>> 369ea9e71298eccd077d7f0398d96f6b28237ef5
