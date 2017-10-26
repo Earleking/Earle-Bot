@@ -9,6 +9,7 @@ var YouTube = require('./youTubePlayer');
 var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
+const Stage = require('./pokemonFiles/stage');
 const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
 const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
 let lAPI = new riotAPI(riotAPIKey);
@@ -153,6 +154,9 @@ client.on('message', msg => {
         .setThumbnail("http://i.imgur.com/p2qNFag.png");
     
       msg.channel.send({embed}); 
+  }
+  else if(id == "%team") {
+    var stage = new Stage(msg.author);
   }
   //Music stuff goes here
   else {

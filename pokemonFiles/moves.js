@@ -1,6 +1,8 @@
-function Moves(newID) {
-    this.id = newID;
-    this.name;
+function Moves(name, emitter) {
+    this.emitter = emitter;
+
+    this.id;
+    this.name = name;
     this.damage;
     this.pp;
     this.type;//fire, grass etc
@@ -20,12 +22,12 @@ function Moves(newID) {
     this.fText;
     this.target;
     this.request = require('request');
-    var url = 'https://pokeapi.co/api/v2/move/' + this.id;
+    var url = 'https://pokeapi.co/api/v2/move/' + this.name;
     var self = this;
     this.request(url, function(err, body) {
         var text = JSON.parse(body.body);
         //All have these
-        self.name = text.name;
+        self.id = text.id;
         self.pp = text.pp;
         self.type = text.type.name;
         self.category = text.damage_class.name;
@@ -44,6 +46,9 @@ function Moves(newID) {
         //Damage
         self.critRate = text.meta.crit_rate;
         self.damage = text.power;
+        if(self.damage == undefined) {
+            self.damage = 0;
+        }
         self.minHits = text.meta.min_hits;
         self.maxHits = text.meta.max_hits;
         //Aliments
@@ -51,6 +56,7 @@ function Moves(newID) {
         //Stats
         self.statChange = text.stat_changes;
         self.target = text.target.name;
+        self.emitter.emit('moveCreated');
     });
 }
 
