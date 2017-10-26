@@ -146,16 +146,13 @@ client.on('message', msg => {
   else if(id == "%status") msg.channel.send("Working");
   
   else if (id == "%test") {
-    var url = "defnotaurl";
-    var rStream;
-    try {
-        rStream = ytdl(url, {
-            filter : 'audioonly',
-        });
-    }
-    catch (Error) {
-        msg.channel.send("Not a valid link");
-    }
+      const embed = new Discord.RichEmbed()
+        .setTitle("Hello there")
+        .setDescription("hello")
+        .setColor(0x00AE86)
+        .setThumbnail("http://i.imgur.com/p2qNFag.png");
+    
+      msg.channel.send({embed}); 
   }
   //Music stuff goes here
   else {
