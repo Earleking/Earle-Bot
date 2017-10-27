@@ -148,7 +148,7 @@ client.on('message', msg => {
   
   else if (id == "%test") {
   }
-  else if(id == "%pkBattle") {
+  else if(id == "%pkbattle") {
     var p2 = client.users.get(secondPart(msg).substring(2, secondPart(msg).length - 1));
     if(p2 == undefined) {
       msg.channel.send("Invalid opponent");
@@ -220,10 +220,6 @@ client.on('message', msg => {
                 connection.end();
             }
             else msg.channel.send("Bit busy right now, hold up a second.");  
-        }
-        else if(channel == undefined) {
-            msg.channel.send("No can do. I'm kinda just floating in limbo right now. Try summoning me first");
-            return;
         }
         else if(id == "%pause") {
             pause(msg);
@@ -679,6 +675,6 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
