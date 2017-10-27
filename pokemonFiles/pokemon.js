@@ -44,7 +44,6 @@ Pokemon.prototype.inital = function() {
         self.type = text.types;
         self.weight = text.weight;
         self.possibleMoves = text.moves;
-        console.log(text);
         for(var i = 0; i < text.stats.length; i ++) {
             if(text.stats[i].stat.name == "speed") {
                 self.stats[5] = text.stats[i].base_stat; 
@@ -84,7 +83,7 @@ Pokemon.prototype.generateMoves = function() {
     if(this.possibleMoves.length > 4) {
         for(var i = 0; i < 4; i ++) {
             //the multiplcation puts it into quarters and each move comes from 1/4th of the move set. yea. Im so smart
-            this.moves[i] = this.possibleMoves[Math.round(Math.random() * this.possibleMoves.length * .25 * (i + 1))].move.name;
+            this.moves[i] = this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length * .25 * (i + 1))].move.name;
             this.moves[i] = new this.Move(this.moves[i], this.myEmitter);
         }
     }

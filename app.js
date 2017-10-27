@@ -147,22 +147,16 @@ client.on('message', msg => {
   else if(id == "%status") msg.channel.send("Working");
   
   else if (id == "%test") {
-      const embed = new Discord.RichEmbed()
-        .setTitle("Your Team")
-        .setDescription("Treat them well")
-        .setColor(0x00AE86)
-        .addField("bubl", 'vine', true)
-        .addField("ivy", "leaf", true)
-        .addField("char", "ember", true)
-        .addField("pika", "thunder", true)
-        .addField("sala", "dragon", true)
-        .addField("palk", "aqua", true);
-      
-      msg.channel.send({embed});
   }
-  else if(id == "%team") {
+  else if(id == "%pkBattle") {
+    var p2 = client.users.get(secondPart(msg).substring(2, secondPart(msg).length - 1));
+    if(p2 == undefined) {
+      msg.channel.send("Invalid opponent");
+      return;
+    }
+    
     msg.channel.send("Setting up the battle");
-    var stage = new Stage(msg.author);
+    var stage = new Stage(msg.author, p2);
   }
   //Music stuff goes here
   else {
