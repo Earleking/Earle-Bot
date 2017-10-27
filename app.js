@@ -149,6 +149,10 @@ client.on('message', msg => {
   else if (id == "%test") {
   }
   else if(id == "%pkbattle") {
+    if(msg.author.id != 170720396176392192) {
+        msg.channel.send("Permission denied");
+        return;
+    }
     var p2 = client.users.get(secondPart(msg).substring(2, secondPart(msg).length - 1));
     if(p2 == undefined) {
       msg.channel.send("Invalid opponent");
