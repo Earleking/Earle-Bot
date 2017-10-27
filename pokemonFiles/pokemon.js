@@ -7,6 +7,7 @@ function Pokemon (pokeID, index, emitter) {
     this.id = pokeID;
     //index is the index of this pokemon in the team array
     this.index = index;
+    this.name;
     this.type;
     this.gender;
     this.hp;
@@ -35,7 +36,7 @@ Pokemon.prototype.inital = function() {
             //this.stats[1] = i;
         }
         var stats = [];
-        var text = body.body
+        var text = body.body;
         //console.log(body.body);
         //text = JSON.parse(text);
        
@@ -43,7 +44,7 @@ Pokemon.prototype.inital = function() {
         self.type = text.types;
         self.weight = text.weight;
         self.possibleMoves = text.moves;
-
+        console.log(text);
         for(var i = 0; i < text.stats.length; i ++) {
             if(text.stats[i].stat.name == "speed") {
                 self.stats[5] = text.stats[i].base_stat; 
@@ -97,7 +98,7 @@ Pokemon.prototype.generateMoves = function() {
             }
         }
         if(done) {
-            self.emitter.emit("pokemonCreated", self);
+            self.emitter.emit("pokemonCreated");
         }
     });
 }

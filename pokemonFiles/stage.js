@@ -1,7 +1,7 @@
 function Stage(player1) {
-    this.Pokemon = require('./pokemon')
+    this.Pokemon = require('./pokemon');
     this.events = require('events');
-
+    this.Discord = require('discord.js');
     
    
 
@@ -21,9 +21,10 @@ function Stage(player1) {
     this.t1Emitter = new this.events.EventEmitter();
     this.t2Emitter = new this.events.EventEmitter();
     
-    this.begin();
+    this.createTeam1();
+    this.createTeam2();
 }
-Stage.prototype.begin = function () {
+Stage.prototype.createTeam1 = function () {
     //this.p2 = player2;
     for(var i = 0; i < 6; i ++) {
         this.team1[i] = new this.Pokemon(Math.floor(Math.random() * 500) + 1, i, this.t1Emitter);
@@ -32,27 +33,98 @@ Stage.prototype.begin = function () {
     var self = this;
     this.t1Emitter.on('teamDone', function() {
         //console.log(self.p1);
-        self.p1.send("Your team is: ");
-        self.p1.send(self.team1[0].name);
-        self.p1.send(self.team1[1].name);
-        self.p1.send(self.team1[2].name);
-        self.p1.send(self.team1[3].name);
-        self.p1.send(self.team1[4].name);        
-        self.p1.send(self.team1[5].name);        
+        /*var toSend = "";
+        for(var i = 0; i < 6; i ++) {
+            if(i == 0) {
+                self.p1.send("Your team is: ");            
+            }
+            toSend += self.team1[i].name + " hp: " + self.team1[i].stats[0] + '\n';  
+        }
+        self.p1.send(toSend);*/
+        console.log("printing team 1");
+        self.test(1);
+        console.log("done printing team 1");
     });
-    this.t1Emitter.on("pokemonCreated", function() {
+    const createdListener = function(x) {
         console.log("Created a pokemon");
         var done = true;
         for(var i = 0; i < 6; i ++) {
             if(self.team1[i].name == undefined) {
                 done = false;
+                console.log("stopped");
                 return;
             }
         }
         if(done) {
             self.t1Emitter.emit("teamDone");
+            self.t1Emitter.removeListener("pokemonCreated", createdListener);
         }
+    }
+    this.t1Emitter.on("pokemonCreated", createdListener);
+}
+Stage.prototype.createTeam2 = function () {
+    //this.p2 = player2;
+    for(var i = 0; i < 6; i ++) {
+        this.team2[i] = new this.Pokemon(Math.floor(Math.random() * 500) + 1, i, this.t2Emitter);
+        //this.p2Pokemon[i] = this.Pokemon(floor(Math.random() * 500), i, this.emitter);  
+    }
+    var self = this;
+    this.t2Emitter.on('teamDone', function() {
+        //console.log(self.p1);
+        var toSend = "";
+        for(var i = 0; i < 6; i ++) {
+            if(i == 0) {
+                //!!!CHANGE TO p2 LATER
+                self.p1.send("Their team is: ");            
+            }
+            toSend += self.team2[i].name + " hp: " + self.team2[i].stats[0] + '\n';  
+        }
+        self.p1.send(toSend);
     });
+    const createdListener = function(x) {
+        console.log("Created a pokemon");
+        var done = true;
+        for(var i = 0; i < 6; i ++) {
+            if(self.team2[i].name == undefined) {
+                done = false;
+                console.log("stopped");
+                return;
+            }
+        }
+        if(done) {
+            self.t2Emitter.emit("teamDone");
+            self.t2Emitter.removeListener("pokemonCreated", createdListener);
+        }
+    }
+    this.t2Emitter.on("pokemonCreated", createdListener);
+}
+Stage.prototype.test = function (team) {
+    if(team == 1) {
+        var moves = [];
+        console.log(this.team1.length);
+        for(var i = 0; i < this.team1.length; i ++) {
+            moves[i] = "";
+            console.log("working");
+            for(var t = 0; t < this.team1[i].moves.length; t++) {
+                moves[i] += this.team1[i].moves[t].name + '\n'; 
+            }
+        }
+        const embed = new this.Discord.RichEmbed()
+        .setTitle("Your Team")
+        .setDescription("Treat them well")
+        .setColor(0x00AE86)
+        .addField(this.team1[0].name, moves[0], true)
+        .addField(this.team1[1].name, moves[1], true)
+        .addField(this.team1[2].name, moves[2], true)
+        .addField(this.team1[3].name, moves[3], true)
+        .addField(this.team1[4].name, moves[4], true)
+        .addField(this.team1[5].name, moves[5], true);
+      console.log("trying to print here");
+      this.p1.send({embed});
+    }
+    else {
+        console.log('uhoh');
+    }
 }
 Stage.prototype.receiveTurn = function(player, move) {
     if(player == this.p1) {
@@ -131,6 +203,9 @@ Stage.prototype.dealDamage = function(victim, damage) {
     if(victim.getHP <= 0) {
         victim.alive = false;
     }
+}
+Stage.prototype.printTeam = function(player) {
+
 }
 module.exports = Stage;
 

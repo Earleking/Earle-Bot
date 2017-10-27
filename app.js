@@ -148,14 +148,20 @@ client.on('message', msg => {
   
   else if (id == "%test") {
       const embed = new Discord.RichEmbed()
-        .setTitle("Hello there")
-        .setDescription("hello")
+        .setTitle("Your Team")
+        .setDescription("Treat them well")
         .setColor(0x00AE86)
-        .setThumbnail("http://i.imgur.com/p2qNFag.png");
-    
-      msg.channel.send({embed}); 
+        .addField("bubl", 'vine', true)
+        .addField("ivy", "leaf", true)
+        .addField("char", "ember", true)
+        .addField("pika", "thunder", true)
+        .addField("sala", "dragon", true)
+        .addField("palk", "aqua", true);
+      
+      msg.channel.send({embed});
   }
   else if(id == "%team") {
+    msg.channel.send("Setting up the battle");
     var stage = new Stage(msg.author);
   }
   //Music stuff goes here
