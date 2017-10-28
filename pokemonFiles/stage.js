@@ -69,7 +69,7 @@ Stage.prototype.createTeam2 = function () {
         console.log("Created a pokemon");
         var done = true;
         for(var i = 0; i < 6; i ++) {
-            if(self.team2[i].name == undefined) {
+            if(self.team2[i].created == false) {
                 done = false;
                 console.log("stopped");
                 return;
@@ -159,6 +159,7 @@ Stage.prototype.printBattleStage = function(toPlayer) {
         var outMon = this.team1[this.p1Pokemon];
         const embed = new this.Discord.RichEmbed()
         .setTitle(outMon.name)
+        .setThumbnail(outMon.sprite)
         .setDescription("HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
                         "Attack: " + outMon.getAttack() + "\n" +
                         "Defense: " + outMon.getDefense() + "\n" +

@@ -21,6 +21,7 @@ function Pokemon (pokeID, index, emitter) {
     this.stats = [];
     this.accuracy;
     this.evasion;
+    this.sprite;
     this.created = false;
     this.moves = [];
     this.possibleMoves;
@@ -44,6 +45,7 @@ Pokemon.prototype.inital = function() {
         self.type = text.types;
         self.weight = text.weight;
         self.possibleMoves = text.moves;
+        self.sprite = text.sprites.front_default;
         for(var i = 0; i < text.stats.length; i ++) {
             if(text.stats[i].stat.name == "speed") {
                 self.stats[5] = text.stats[i].base_stat; 
