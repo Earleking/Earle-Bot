@@ -8,6 +8,7 @@ function Pokemon (pokeID, index, emitter) {
     //index is the index of this pokemon in the team array
     this.index = index;
     this.name;
+    this.sprite;
     this.type;
     this.gender;
     this.maxHP;
@@ -39,7 +40,7 @@ Pokemon.prototype.inital = function() {
         var text = body.body;
         //console.log(body.body);
         //text = JSON.parse(text);
-       
+        self.sprite = text.sprites.front_default;
         self.name = text.name;
         self.type = text.types;
         self.weight = text.weight;
@@ -94,7 +95,6 @@ Pokemon.prototype.generateMoves = function() {
         for(var i = 0; i < 4; i ++) {
             
             if(self.moves[i].damage == undefined) {
-                console.log("not defined yet");
                 done = false;
                 return;
             }
