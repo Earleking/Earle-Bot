@@ -147,19 +147,7 @@ client.on('message', msg => {
   else if(id == "%status") msg.channel.send("Working");
   
   else if (id == "%test") {
-      msg.createReactionCollector((reaction, user) => {
-        console.log(reaction.message.reactions);
-      });
-      console.log(secondPart(msg).toString);
-      const list = msg.guild.emojis;
-      console.log(list);
-      //const hi = guild.emojis.find("name", "hello");
-      //msg.channel.send(":eggplant:");
-          
-      
-      
-      msg.channel.send(msg2);
-      //console.log(client.guilds);   
+     
       const embed = new Discord.RichEmbed()
         .setTitle("Hello there")
         .setDescription("hello")
@@ -168,7 +156,7 @@ client.on('message', msg => {
         .setFooter('Hello');
         //var toSend = new Discord.Message(msg.channel, embed, client);
         //toSend.react()
-      //msg.channel.send({embed}); 
+      msg.channel.send({embed}); 
   }
   else if(id == "%pkbattle") {
     if(msg.author.id != 170720396176392192) {

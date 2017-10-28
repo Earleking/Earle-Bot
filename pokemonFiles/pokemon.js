@@ -100,7 +100,6 @@ Pokemon.prototype.generateMoves = function() {
             }
         }
         if(done == true) {
-            console.log("we made a pokemon");
             self.created = true;
             self.emitter.emit("pokemonCreated");
         }
