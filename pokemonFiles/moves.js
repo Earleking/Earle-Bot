@@ -38,9 +38,10 @@ function Moves(name, emitter) {
         for(var i = 0; i < text.flavor_text_entries.length; i ++) {
             if(text.flavor_text_entries[i].language.name == "en") {
                 self.fText = text.flavor_text_entries[i].flavor_text;
+                i = text.flavor_text_entries.length + 1;
                 break;
             }
-            if(i = text.flavor_text_entries.length - 1)
+            if(i == text.flavor_text_entries.length - 1)
                 self.fText = "Could not find flavor text in english";
         }
         //Damage

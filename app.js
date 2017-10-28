@@ -147,6 +147,28 @@ client.on('message', msg => {
   else if(id == "%status") msg.channel.send("Working");
   
   else if (id == "%test") {
+      msg.createReactionCollector((reaction, user) => {
+        console.log(reaction.message.reactions);
+      });
+      console.log(secondPart(msg).toString);
+      const list = msg.guild.emojis;
+      console.log(list);
+      //const hi = guild.emojis.find("name", "hello");
+      //msg.channel.send(":eggplant:");
+          
+      
+      
+      msg.channel.send(msg2);
+      //console.log(client.guilds);   
+      const embed = new Discord.RichEmbed()
+        .setTitle("Hello there")
+        .setDescription("hello")
+        .setColor(0x00AE86)
+        .setThumbnail("http://i.imgur.com/p2qNFag.png")
+        .setFooter('Hello');
+        //var toSend = new Discord.Message(msg.channel, embed, client);
+        //toSend.react()
+      //msg.channel.send({embed}); 
   }
   else if(id == "%pkbattle") {
     if(msg.author.id != 170720396176392192) {
@@ -679,6 +701,6 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');

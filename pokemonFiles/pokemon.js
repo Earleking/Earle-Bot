@@ -10,7 +10,7 @@ function Pokemon (pokeID, index, emitter) {
     this.name;
     this.type;
     this.gender;
-    this.hp;
+    this.maxHP;
     this.alive = true;
     this.weight;
     this.attack;
@@ -21,7 +21,7 @@ function Pokemon (pokeID, index, emitter) {
     this.stats = [];
     this.accuracy;
     this.evasion;
-    
+    this.created = false;
     this.moves = [];
     this.possibleMoves;
     this.inital()
@@ -62,6 +62,7 @@ Pokemon.prototype.inital = function() {
             }
             else if(text.stats[i].stat.name == "hp"){
                 self.stats[0] = text.stats[i].base_stat * 3;
+                self.maxHP = self.stats[0];
             }
             
         } 
@@ -83,7 +84,7 @@ Pokemon.prototype.generateMoves = function() {
     if(this.possibleMoves.length > 4) {
         for(var i = 0; i < 4; i ++) {
             //the multiplcation puts it into quarters and each move comes from 1/4th of the move set. yea. Im so smart
-            this.moves[i] = this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length * .25 * (i + 1))].move.name;
+            this.moves[i] = this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length * .25 + ((this.possibleMoves.length / 4) * (i)))].move.name;
             this.moves[i] = new this.Move(this.moves[i], this.myEmitter);
         }
     }
@@ -91,12 +92,16 @@ Pokemon.prototype.generateMoves = function() {
     this.myEmitter.on("moveCreated", function() {
         var done = true;
         for(var i = 0; i < 4; i ++) {
+            
             if(self.moves[i].damage == undefined) {
+                console.log("not defined yet");
                 done = false;
                 return;
             }
         }
-        if(done) {
+        if(done == true) {
+            console.log("we made a pokemon");
+            self.created = true;
             self.emitter.emit("pokemonCreated");
         }
     });
@@ -127,6 +132,9 @@ Pokemon.prototype.getID = function() {
 }
 Pokemon.prototype.getType = function() {
     return this.type;
+}
+Pokemon.prototype.getMaxHP = function() {
+    return this.maxHP;
 }
 Pokemon.prototype.getHP = function() {
     return this.stats[0];

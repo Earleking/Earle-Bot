@@ -8,15 +8,17 @@ function Stage(player1, player2) {
     //p1
     this.p1 = player1;
     this.team1 = [];
-    this.p1Pokemon;
+    this.p1Pokemon = 0;//index of current pokemon in team1
     this.p1Move;
     this.p1Turn;
+    this.p1Msg;
     //p2
     this.p2 = player2;
     this.team2 = [];
-    this.p2Pokemon;
+    this.p2Pokemon = 0;//index of current pokemon in team2
     this.p2Move;
     this.p2Turn;
+    this.p2Msg;
 
     this.t1Emitter = new this.events.EventEmitter();
     this.t2Emitter = new this.events.EventEmitter();
@@ -32,22 +34,13 @@ Stage.prototype.createTeam1 = function () {
     }
     var self = this;
     this.t1Emitter.on('teamDone', function() {
-        //console.log(self.p1);
-        /*var toSend = "";
-        for(var i = 0; i < 6; i ++) {
-            if(i == 0) {
-                self.p1.send("Your team is: ");            
-            }
-            toSend += self.team1[i].name + " hp: " + self.team1[i].stats[0] + '\n';  
-        }
-        self.p1.send(toSend);*/
         self.test(1);
     });
     const createdListener = function(x) {
         console.log("Created a pokemon");
         var done = true;
         for(var i = 0; i < 6; i ++) {
-            if(self.team1[i].name == undefined) {
+            if(self.team1[i].created == false) {
                 done = false;
                 console.log("stopped");
                 return;
@@ -96,7 +89,7 @@ Stage.prototype.test = function (team) {
         for(var i = 0; i < this.team1.length; i ++) {
             moves[i] = "";
             for(var t = 0; t < this.team1[i].moves.length; t++) {
-                moves[i] += this.team1[i].moves[t].name + '\n'; 
+                moves[i] += (t+1) + ". " + this.team1[i].moves[t].name + '\n'; 
             }
         }
         const embed = new this.Discord.RichEmbed()
@@ -131,6 +124,7 @@ Stage.prototype.test = function (team) {
         .addField(this.team2[5].name, moves[5], true);
       this.p2.send({embed});
     }
+    this.printBattleStage(team);
 }
 Stage.prototype.receiveTurn = function(player, move) {
     if(player == this.p1) {
@@ -160,11 +154,76 @@ Stage.prototype.receiveTurn = function(player, move) {
         }
     }
 }
-
+Stage.prototype.printBattleStage = function(toPlayer) {
+    if(toPlayer == 1) {
+        var outMon = this.team1[this.p1Pokemon];
+        const embed = new this.Discord.RichEmbed()
+        .setTitle(outMon.name)
+        .setDescription("HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
+                        "Attack: " + outMon.getAttack() + "\n" +
+                        "Defense: " + outMon.getDefense() + "\n" +
+                        "S.Attack: " + outMon.getSAttack() + "\n" +
+                        "S.Defense: " + outMon.getSDefense() + "\n" + 
+                        "Speed: " + outMon.getSpeed()
+                        );
+        for(var i = 0; i < outMon.moves.length; i ++) {
+            embed.addField(outMon.moves[i].name, outMon.moves[i].fText + "\n" + 
+                            "Damage: " + outMon.moves[i].damage + "\n" +
+                            "Accuracy: " + outMon.moves[i].accuracy 
+                            );
+        }
+        this.p1.send({embed}).then(function(result) {
+            this.p1Msg = result;
+            result.react("1⃣");
+            setTimeout(function() {
+                result.react("2⃣");
+                setTimeout(function() {
+                    result.react("3⃣");
+                    setTimeout(function() {
+                        result.react("4⃣");
+                    }, 500);
+                }, 500);
+            }, 500);  
+        });
+        
+         
+    }
+    else {
+        var outMon = this.team2[this.p1Pokemon];
+        const embed = new this.Discord.RichEmbed()
+        .setTitle(outMon.name)
+        .setDescription("HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
+                        "Attack: " + outMon.getAttack() + "\n" +
+                        "Defense: " + outMon.getDefense() + "\n" +
+                        "S.Attack: " + outMon.getSAttack() + "\n" +
+                        "S.Defense: " + outMon.getSDefense() + "\n" + 
+                        "Speed: " + outMon.getSpeed()
+                        );
+        for(var i = 0; i < outMon.moves.length; i ++) {
+            embed.addField(outMon.moves[i].name, outMon.moves[i].fText + "\n" + 
+                            "Damage: " + outMon.moves[i].damage + "\n" +
+                            "Accuracy: " + outMon.moves[i].accuracy 
+                            );
+        }
+        this.p2.send({embed}).then(function(result) {
+            this.p2Msg = result;
+            result.react("1⃣");
+            setTimeout(function() {
+                result.react("2⃣");
+                setTimeout(function() {
+                    result.react("3⃣");
+                    setTimeout(function() {
+                        result.react("4⃣");
+                    }, 500);
+                }, 500);
+            }, 500);
+        });
+    }
+}
 Stage.prototype.useMoves = function() {
     if(this.p1Move.priority - this.p2Move.priority == 0) {
         //speed determines first use
-        if(this.p1Pokemon.getSpeed() - this.p2Pokemon.getSpeed() > 0) {
+        if(this.team1[this.p1Pokemon].getSpeed() - this.team2[this.p2Pokemon].getSpeed() > 0) {
             //p1 is faster
             var moveEffects = this.p1Move.impact.split('+');
             if(this.p1Move.category != "status") {
