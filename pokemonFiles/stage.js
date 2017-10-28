@@ -12,6 +12,8 @@ function Stage(player1, player2) {
     this.p1Move;
     this.p1Turn;
     this.p1Msg;
+    this.p1OppMsg;
+    this.t1Created = false;
     //p2
     this.p2 = player2;
     this.team2 = [];
@@ -19,7 +21,8 @@ function Stage(player1, player2) {
     this.p2Move;
     this.p2Turn;
     this.p2Msg;
-
+    this.p2OppMsg;
+    this.t2Created = false;
     this.t1Emitter = new this.events.EventEmitter();
     this.t2Emitter = new this.events.EventEmitter();
     
@@ -34,21 +37,21 @@ Stage.prototype.createTeam1 = function () {
     }
     var self = this;
     this.t1Emitter.on('teamDone', function() {
-        self.test(1);
+        self.t1Created = true;
+        if(self.t1Created && self.t2Created) {
+            self.test(1);
+            self.test(2);
+        }
     });
     const createdListener = function(x) {
-        console.log("Created a pokemon");
         var done = true;
         for(var i = 0; i < 6; i ++) {
             if(self.team1[i].created == false) {
                 done = false;
-                console.log("stopped");
                 return;
             }
         }
-        if(done) {
-            console.log("teamcreated");
-            
+        if(done) {            
             self.t1Emitter.emit("teamDone");
             self.t1Emitter.removeListener("pokemonCreated", createdListener);
         }
@@ -63,20 +66,21 @@ Stage.prototype.createTeam2 = function () {
     }
     var self = this;
     this.t2Emitter.on('teamDone', function() {
-        self.test(2);
+        self.t2Created = true;
+        if(self.t1Created && self.t2Created) {
+            self.test(1);
+            self.test(2);
+        }
     });
     const createdListener = function(x) {
-        console.log("Created a pokemon");
         var done = true;
         for(var i = 0; i < 6; i ++) {
             if(self.team2[i].created == false) {
                 done = false;
-                console.log("stopped");
                 return;
             }
         }
         if(done) {
-            console.log("teamcreated");
             self.t2Emitter.emit("teamDone");
             self.t2Emitter.removeListener("pokemonCreated", createdListener);
         }
@@ -156,11 +160,36 @@ Stage.prototype.receiveTurn = function(player, move) {
 }
 Stage.prototype.printBattleStage = function(toPlayer) {
     if(toPlayer == 1) {
+        var oppMon = this.team2[this.p2Pokemon];
+        var typeString;
+        if(oppMon.type.length > 1) {
+            typeString = oppMon.type[0].type.name + "/" + oppMon.type[1].type.name;
+        }
+        else {
+            typeString = oppMon.type[0].type.name;
+        }
+        var embed = new this.Discord.RichEmbed()
+        .setTitle(oppMon.name)
+        .setThumbnail(oppMon.sprite)
+        .setDescription("Type: " + typeString + "\n" + "HP: " + oppMon.getHP() + "/" + oppMon.getMaxHP() + "\n");
+        this.p1.send({embed}).then(function(results) {
+            this.p1OppMsg = results;
+        });
+
+
         var outMon = this.team1[this.p1Pokemon];
-        const embed = new this.Discord.RichEmbed()
+        if(outMon.type.length > 1) {
+            typeString = outMon.type[0].type.name + "/" + outMon.type[1].type.name;
+        }
+        else {
+            typeString = outMon.type[0].type.name;
+        }
+
+        embed = new this.Discord.RichEmbed()
         .setTitle(outMon.name)
         .setThumbnail(outMon.sprite)
-        .setDescription("HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
+        .setDescription("Type: " + typeString + "\n" +
+                        "HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
                         "Attack: " + outMon.getAttack() + "\n" +
                         "Defense: " + outMon.getDefense() + "\n" +
                         "S.Attack: " + outMon.getSAttack() + "\n" +
@@ -186,14 +215,40 @@ Stage.prototype.printBattleStage = function(toPlayer) {
                 }, 500);
             }, 500);  
         });
-        
+
          
     }
     else {
-        var outMon = this.team2[this.p1Pokemon];
-        const embed = new this.Discord.RichEmbed()
+        var oppMon = this.team1[this.p1Pokemon];
+        
+        var typeString;
+        if(oppMon.type.length > 1) {
+            typeString = oppMon.type[0].type.name + "/" + oppMon.type[1].type.name;
+        }
+        else {
+            typeString = oppMon.type[0].type.name;
+        }
+        var embed = new this.Discord.RichEmbed()
+        .setTitle(oppMon.name)
+        .setDescription("Type: " + typeString + "\n" + "HP: " + oppMon.getHP() + "/" + oppMon.getMaxHP())
+        .setThumbnail(oppMon.sprite);
+        this.p2.send({embed}).then(function(result) {
+            this.p2OppMsg = result;
+        });
+
+
+        var outMon = this.team2[this.p2Pokemon];
+        if(outMon.type.length > 1) {
+            typeString = outMon.type[0].type.name + "/" + outMon.type[1].type.name;
+        }
+        else {
+            typeString = outMon.type[0].type.name;
+        }
+        embed = new this.Discord.RichEmbed()
         .setTitle(outMon.name)
-        .setDescription("HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
+        .setThumbnail(outMon.sprite)
+        .setDescription("Type: " + typeString + "\n" +
+                        "HP: " + outMon.getHP() + "/" + outMon.getMaxHP() + "\n" +
                         "Attack: " + outMon.getAttack() + "\n" +
                         "Defense: " + outMon.getDefense() + "\n" +
                         "S.Attack: " + outMon.getSAttack() + "\n" +
