@@ -329,5 +329,3 @@ Stage.prototype.printTeam = function(player) {
 
 }
 module.exports = Stage;
-
-
