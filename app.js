@@ -10,8 +10,9 @@ var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
 const Stage = require('./pokemonFiles/stage');
-const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
-const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
+const riotAPIKey = process.env.RIOT_KEY;
+const youtubeAPIKey = process.env.YOUTUBE_KEY;
+
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
@@ -689,6 +690,7 @@ function shuffle() {
   }
 }
 //Main bot
-client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
+//client.login(process.env.BOT_TOKEN);
+
 //Test bot
-//client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login(process.env.TEST_BOT_TOKEN);

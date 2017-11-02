@@ -1,8 +1,8 @@
 //Imgur API
 class ImgurAPI {
     constructor() {
-        this.id = '599b2808a683e4f';
-        this.secret = '1ae286eadee89763b942e41656092e092091423b';
+        this.id = process.env.IMGUR_ID;
+        this.secret = process.env.IMGUR_SECRET;
         this.request = require('request');
     }
     getImageFromAlbum(albumHash, callback) {
