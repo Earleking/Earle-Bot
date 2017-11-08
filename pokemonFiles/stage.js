@@ -1,8 +1,8 @@
-function Stage(player1, player2) {
+function Stage(player1, player2, discordBot) {
     this.Pokemon = require('./pokemon');
     this.events = require('events');
     this.Discord = require('discord.js');
-    
+    this.bot = discordBot;
    
 
     //p1
@@ -28,6 +28,25 @@ function Stage(player1, player2) {
     
     this.createTeam1();
     this.createTeam2();
+
+    //reaction listeners
+    this.bot.on('messageReactionAdd', function(reaction, user) {
+        //reacted to p1msg
+        console.log("you added a reaction");
+        //console.log(reaction.message);
+        if(reaction.message.id == this.p1Msg.id) {
+            console.log('hello');
+            this.p1Msg.clearReactions().then(function(msg) {
+                this.p1Msg.edit("Yay congrats");
+            });
+            
+        }
+
+        //reacted to p2Msg
+        else if(reaction.message == this.p2Msg) {
+
+        }
+    });
 }
 Stage.prototype.createTeam1 = function () {
     //this.p2 = player2;
@@ -106,7 +125,6 @@ Stage.prototype.test = function (team) {
         .addField(this.team1[3].name, moves[3], true)
         .addField(this.team1[4].name, moves[4], true)
         .addField(this.team1[5].name, moves[5], true);
-      this.p1.send({embed});
     }
     else {
         var moves = [];
@@ -172,11 +190,15 @@ Stage.prototype.printBattleStage = function(toPlayer) {
         .setTitle(oppMon.name)
         .setThumbnail(oppMon.sprite)
         .setDescription("Type: " + typeString + "\n" + "HP: " + oppMon.getHP() + "/" + oppMon.getMaxHP() + "\n");
-        this.p1.send({embed}).then(function(results) {
-            this.p1OppMsg = results;
-        });
-
-
+        if(this.p1OppMsg == undefined){
+            this.p1.send({embed}).then(function(results) {
+                this.p1OppMsg = results;
+            });
+        }
+        else {
+            this.p1OppMsg.edit({embed});
+        }
+        
         var outMon = this.team1[this.p1Pokemon];
         if(outMon.type.length > 1) {
             typeString = outMon.type[0].type.name + "/" + outMon.type[1].type.name;
@@ -202,20 +224,33 @@ Stage.prototype.printBattleStage = function(toPlayer) {
                             "Accuracy: " + outMon.moves[i].accuracy 
                             );
         }
-        this.p1.send({embed}).then(function(result) {
-            this.p1Msg = result;
-            result.react("1⃣");
-            setTimeout(function() {
-                result.react("2⃣");
-                setTimeout(function() {
-                    result.react("3⃣");
-                    setTimeout(function() {
-                        result.react("4⃣");
-                    }, 500);
-                }, 500);
-            }, 500);  
-        });
-
+        if(this.p1msg == undefined) {
+            this.p1.send({embed}).then(function(result) {
+                this.p1Msg = result;
+                result.react("1⃣").then(function(reaction) {
+                    result.react("2⃣").then(function(reaction) {
+                        result.react("3⃣").then(function(reaction) {
+                            result.react("4⃣");
+                        });
+                    });
+                }); 
+                
+            });
+        }
+        else {
+            this.p1msg.edit({embed}).then(function(result) {
+                //this.p1Msg = result;
+                result.react("1⃣").then(function(reaction) {
+                    result.react("2⃣").then(function(reaction) {
+                        result.react("3⃣").then(function(reaction) {
+                            result.react("4⃣");
+                        });
+                    });
+                });
+            }); 
+        }
+        
+        
          
     }
     else {
@@ -232,9 +267,15 @@ Stage.prototype.printBattleStage = function(toPlayer) {
         .setTitle(oppMon.name)
         .setDescription("Type: " + typeString + "\n" + "HP: " + oppMon.getHP() + "/" + oppMon.getMaxHP())
         .setThumbnail(oppMon.sprite);
-        this.p2.send({embed}).then(function(result) {
-            this.p2OppMsg = result;
-        });
+        if(this.p2OppMsg == undefined) {
+            this.p2.send({embed}).then(function(result) {
+                this.p2OppMsg = result;
+            });
+        }
+        else {
+            this.p2OppMsg.edit({embed});
+        }
+        
 
 
         var outMon = this.team2[this.p2Pokemon];
@@ -261,19 +302,33 @@ Stage.prototype.printBattleStage = function(toPlayer) {
                             "Accuracy: " + outMon.moves[i].accuracy 
                             );
         }
-        this.p2.send({embed}).then(function(result) {
-            this.p2Msg = result;
-            result.react("1⃣");
-            setTimeout(function() {
-                result.react("2⃣");
-                setTimeout(function() {
-                    result.react("3⃣");
-                    setTimeout(function() {
-                        result.react("4⃣");
-                    }, 500);
-                }, 500);
-            }, 500);
-        });
+        if(this.p2Msg == undefined) {
+            this.p2.send({embed}).then(function(result) {
+                this.p2Msg = result;
+                result.react("1⃣").then(function(reaction) {
+                    result.react("2⃣").then(function(reaction) {
+                        result.react("3⃣").then(function(reaction) {
+                            result.react("4⃣");
+                        });
+                    });
+                });  
+            });
+        }
+        else {
+            
+            this.p2Msg.edit({embed}).then(function(result) {
+                result.react("1⃣").then(function(reaction) {
+                    result.react("2⃣").then(function(reaction) {
+                        result.react("3⃣").then(function(reaction) {
+                            result.react("4⃣");
+                        });
+                    });
+                });
+                
+            });
+        }
+        
+            
     }
 }
 Stage.prototype.useMoves = function() {
@@ -282,7 +337,7 @@ Stage.prototype.useMoves = function() {
         if(this.team1[this.p1Pokemon].getSpeed() - this.team2[this.p2Pokemon].getSpeed() > 0) {
             //p1 is faster
             var moveEffects = this.p1Move.impact.split('+');
-            if(this.p1Move.category != "status") {
+            if(this.p1Move.category == "damage" || this.p1Move.category == "damage+ailment") {
                 this.damageMove(this.p1Move, this.team1[this.p1Pokemon], this.team2[this.p2Pokemon]);
             }
         }
