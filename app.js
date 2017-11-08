@@ -10,8 +10,9 @@ var imgurAPI  = require('./ImgurAPI');
 var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
 const Stage = require('./pokemonFiles/stage');
-const riotAPIKey = 'RGAPI-95982c92-5cc4-4678-98dd-e039f60039b2';
-const youtubeAPIKey = 'AIzaSyC8H0cZl_aCPo3ncBi-AEcXcfV7XmiHQsI';
+const riotAPIKey = process.env.RIOT_KEY;
+const youtubeAPIKey = process.env.YOUTUBE_KEY;
+
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
 let youtube = new YouTube(youtubeAPIKey);
