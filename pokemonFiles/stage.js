@@ -25,25 +25,32 @@ function Stage(player1, player2, discordBot) {
     this.t2Created = false;
     this.t1Emitter = new this.events.EventEmitter();
     this.t2Emitter = new this.events.EventEmitter();
-    
+    this.botListeners();
     this.createTeam1();
     this.createTeam2();
 
+}
+Stage.prototype.botListeners = function() {
     //reaction listeners
+    var self = this;
     this.bot.on('messageReactionAdd', function(reaction, user) {
         //reacted to p1msg
         console.log("you added a reaction");
         //console.log(reaction.message);
-        if(reaction.message.id == this.p1Msg.id) {
+        if(user.id == 362270084443406346) {
+            console.log("haha it was me");
+            return;
+        }
+        if(reaction.message.id == self.p1Msg.id) {
             console.log('hello');
-            this.p1Msg.clearReactions().then(function(msg) {
-                this.p1Msg.edit("Yay congrats");
+            self.p1Msg.clearReactions().then(function(msg) {
+                self.p1Msg.edit("Yay congrats");
             });
             
         }
 
         //reacted to p2Msg
-        else if(reaction.message == this.p2Msg) {
+        else if(reaction.message == self.p2Msg) {
 
         }
     });
@@ -225,12 +232,13 @@ Stage.prototype.printBattleStage = function(toPlayer) {
                             );
         }
         if(this.p1msg == undefined) {
+            var self = this;
             this.p1.send({embed}).then(function(result) {
-                this.p1Msg = result;
-                result.react("1⃣").then(function(reaction) {
-                    result.react("2⃣").then(function(reaction) {
-                        result.react("3⃣").then(function(reaction) {
-                            result.react("4⃣");
+                self.p1Msg = result;
+                self.p1Msg.react("1⃣").then(function(reaction) {  
+                    self.p1Msg.react("2⃣").then(function(reaction) {
+                        self.p1Msg.react("3⃣").then(function(reaction) {
+                            self.p1Msg.react("4⃣");
                         });
                     });
                 }); 
@@ -238,12 +246,13 @@ Stage.prototype.printBattleStage = function(toPlayer) {
             });
         }
         else {
+            var self = this;
             this.p1msg.edit({embed}).then(function(result) {
-                //this.p1Msg = result;
-                result.react("1⃣").then(function(reaction) {
-                    result.react("2⃣").then(function(reaction) {
-                        result.react("3⃣").then(function(reaction) {
-                            result.react("4⃣");
+                self.p1Msg = result;
+                self.p1Msg.react("1⃣").then(function(reaction) {
+                    self.p1Msg.react("2⃣").then(function(reaction) {
+                        self.p1Msg.react("3⃣").then(function(reaction) {
+                            self.p1Msg.react("4⃣");
                         });
                     });
                 });
@@ -303,24 +312,25 @@ Stage.prototype.printBattleStage = function(toPlayer) {
                             );
         }
         if(this.p2Msg == undefined) {
+            var self = this;
             this.p2.send({embed}).then(function(result) {
-                this.p2Msg = result;
-                result.react("1⃣").then(function(reaction) {
-                    result.react("2⃣").then(function(reaction) {
-                        result.react("3⃣").then(function(reaction) {
-                            result.react("4⃣");
+                self.p2Msg = result;
+                self.p2Msg.react("1⃣").then(function(reaction) {
+                    self.p2Msg.react("2⃣").then(function(reaction) {
+                        self.p2Msg.react("3⃣").then(function(reaction) {
+                            self.p2Msg.react("4⃣");
                         });
                     });
                 });  
             });
         }
         else {
-            
+            var self = this;
             this.p2Msg.edit({embed}).then(function(result) {
-                result.react("1⃣").then(function(reaction) {
-                    result.react("2⃣").then(function(reaction) {
-                        result.react("3⃣").then(function(reaction) {
-                            result.react("4⃣");
+                self.p2Msg.react("1⃣").then(function(reaction) {
+                    self.p2Msg.react("2⃣").then(function(reaction) {
+                        self.p2Msg.react("3⃣").then(function(reaction) {
+                            self.p2Msg.react("4⃣");
                         });
                     });
                 });
