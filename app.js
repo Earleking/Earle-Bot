@@ -1,3 +1,5 @@
+var envs = require('dotenv');
+console.log(envs.config());
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const musicClient = require('discord.js-music');
@@ -11,7 +13,7 @@ var sAPI = require('./SpotifyAPI');
 var ytdl = require('ytdl-core');
 const Stage = require('./pokemonFiles/stage');
 const riotAPIKey = process.env.RIOT_KEY;
-const youtubeAPIKey = process.env.YOUTUBE_KEY;
+const youtubeAPIKey = process.env.GOOGLE_KEY;
 
 let lAPI = new riotAPI(riotAPIKey);
 let iAPI = new imgurAPI();
@@ -27,7 +29,7 @@ var lockOutCounter = 0;
 sAPI.authenticate(function(res) {
   canSpot = res;
 });
-musicClient(client);
+//musicClient(client);
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -689,6 +691,7 @@ function shuffle() {
     musicQueueNames[i] = temp;
   }
 }
+console.log(process.env.TEST_BOT_TOKEN);
 //Main bot
 //client.login(process.env.BOT_TOKEN);
 

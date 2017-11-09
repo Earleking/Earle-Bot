@@ -8,11 +8,14 @@ class YouTube {
         var parts = name.split(" ");
         name = parts[0];
         for(var i = 1; i < parts.length; i ++) {
-            name+= "+" + parts[i];
+            name+= "%2B" + parts[i];
         }
         var url = this.host + '?part=snippet&maxResults=1&q=' + name + '&key=' + this.API;
         this.request(url, function(error, response, body) {
             var results = JSON.parse(body);
+            if(error) throw error;
+            console.log(url);
+            console.log(results);
             if(results.items[0] == undefined) {
             }
             var t = undefined;
