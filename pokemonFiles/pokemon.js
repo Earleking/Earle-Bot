@@ -26,7 +26,7 @@ function Pokemon (pokeID, index, emitter) {
     this.created = false;
     this.moves = [];
     this.possibleMoves;
-    this.inital()
+    this.inital();
 }
 Pokemon.prototype.inital = function() {
     var url = 'https://pokeapi.co/api/v2/pokemon/' + this.id + "/";

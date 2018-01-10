@@ -1,5 +1,5 @@
 var envs = require('dotenv');
-console.log(envs.config());
+//console.log(envs.config());
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const musicClient = require('discord.js-music');
@@ -691,8 +691,8 @@ function shuffle() {
     musicQueueNames[i] = temp;
   }
 }
-console.log(process.env.TEST_BOT_TOKEN);
+//console.log(process.env.TEST_BOT_TOKEN);
 //Main bot
 //client.login('MzM0NzczMzYxOTc4NzY5NDA4.DK7Qdw.I094n19C2Hnrnqv_e-iU7eKOQgk');
 //Test bot
-client.login('MzYyMjcwMDg0NDQzNDA2MzQ2.DK7SOg.lAqThvIm6Gb6lGYaqeDVx5O9S8o');
+client.login(process.env.TEST_BOT_TOKEN);
